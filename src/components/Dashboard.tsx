@@ -128,7 +128,7 @@ export default function Dashboard({
       <button className="adventure-invite" onClick={onAdventure}>
         <span className="adventure-invite-art" aria-hidden="true">{CHAPTERS.map((c) => <i key={c.name}>{c.symbol}</i>)}</span>
         <span className="adventure-invite-copy"><span className="eyebrow">STORY MISSIONS · NEW BACKDROPS TO EARN</span><strong>The path of the shinobi</strong><span>Nine missions. Three lands. A home for your clan.</span></span>
-        <span className="adventure-invite-action">{ADVENTURE.filter((m) => progress.adventure?.[m.id]).length}/9 complete <b>Begin your journey ↗</b></span>
+        <span className="adventure-invite-action">{ADVENTURE.filter((m) => progress.adventure?.[m.id]).length}/{ADVENTURE.length} complete <b>Begin your journey ↗</b></span>
       </button>
       <div className="dojo-facts">
         <span><b>01</b> Swipe to move</span><span><b>02</b> Merge matching ninjas</span><span><b>03</b> Reach the Sensei</span>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ADVENTURE, adventureGame, adventureStatus, adventureStars, missionUnlocked, recordAdventure, sceneryUnlocked } from "../adventure";
-import { move, settle, type Direction, type GameState } from "../game";
+import { applyUndo, canUndo, move, settle, type Direction, type GameState } from "../game";
 import { EMPTY_PROGRESS } from "../progress";
 
 const dirs: Direction[] = ["left","up","right","down"];
@@ -61,5 +61,19 @@ describe("adventure",()=>{
     expect(adventureStatus(m,{...solve(0)!.game,moves:m.limit})).toBe("won");
     expect(adventureStatus(m,{...solve(0)!.game,moves:m.limit+1})).toBe("lost");
     expect(adventureStars(m,{...solve(0)!.game,undosUsed:1})).toBe(2);
+  });
+});
+
+describe("adventure undo", () => {
+  it("restores the previous board and spends an undo", () => {
+    const m=ADVENTURE[0];
+    const start=adventureGame(m);
+    const moved=dirs.map((d)=>move(start,d)).find((g)=>g!==start)!;
+    expect(canUndo(moved)).toBe(true);
+    const undone=applyUndo(start,moved);
+    expect(undone.tiles).toEqual(start.tiles);
+    expect(undone.moves).toBe(start.moves);
+    expect(undone.undosLeft).toBe(moved.undosLeft-1);
+    expect(undone.undosUsed).toBe(1);
   });
 });

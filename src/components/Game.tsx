@@ -6,6 +6,7 @@ import {
   WIN_VALUE,
   applyUndo,
   canUndo,
+  KEY_MAP,
   highestTile,
   move,
   newGame,
@@ -86,21 +87,6 @@ const POPUP_MS = 900;
 
 type Panel = "stats" | "collection" | "achievements" | "leaderboard" | "settings" | "coach" | "howto";
 type View = "home" | "play" | "puzzles" | "adventure";
-
-const KEY_MAP: Record<string, Direction> = {
-  ArrowUp: "up",
-  ArrowDown: "down",
-  ArrowLeft: "left",
-  ArrowRight: "right",
-  w: "up",
-  s: "down",
-  a: "left",
-  d: "right",
-  k: "up",
-  j: "down",
-  h: "left",
-  l: "right",
-};
 
 /** The single-player mode behind the UI mode ("race" has no single game of its own). */
 function gameMode(settings: Settings): Mode {
@@ -598,14 +584,15 @@ export default function Game() {
       // Remove merge ghosts once the slide animation has finished.
       later(() => {
         const cur = stateRef.current;
-        if (cur && cur.moves === next.moves) commit(settle(cur));
+        // Same move (possibly with coach bookkeeping), not a later state that reached the same move count.
+        if (cur && cur.tiles === next.tiles) commit(settle(cur));
       }, 520);
       if (coachThis) {
         later(() => {
           const note = reviewMove(prev, dir, next);
           setCoachNote(note);
           const cur = stateRef.current;
-          if (cur && cur.moves === next.moves && note.rating === "blunder") {
+          if (cur && cur.tiles === next.tiles && note.rating === "blunder") {
             const log = [...(cur.blunderLog ?? []), { move: next.moves, title: note.title }].slice(-5);
             commit({ ...cur, blunders: (cur.blunders ?? 0) + 1, blunderLog: log });
           }
@@ -722,7 +709,7 @@ export default function Game() {
 
   // ---------- input ----------
   useEffect(() => {
-    if (settings.mode === "race" || view === "home") return;
+    if (settings.mode === "race" || view !== "play") return;
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey || modalOpen) return;
       const target = e.target as HTMLElement | null;
@@ -829,10 +816,11 @@ export default function Game() {
   const completeAdventure = useCallback((id: string, game: GameState) => {
     const next = recordAdventure(progressRef.current, id, game);
     if (next === progressRef.current) return;
-    progressRef.current = next;
-    setProgress(next);
-    saveJson("progress", next);
-  }, []);
+    // recordAdventure grants the star XP; re-check achievements (e.g. level thresholds) against the regular game.
+    const upd = addXp(next, stateRef.current ?? game, 0);
+    applyProgress(upd);
+    saveJson("progress", upd.progress);
+  }, [applyProgress]);
 
   const play = useCallback(
     (patch: Partial<Settings>) => {
@@ -1060,6 +1048,7 @@ export default function Game() {
     return (
       <div className="game game-home" data-scenery={settings.scenery}>
         {appBar}
+        {toasts.length > 0 && <Toasts toasts={toasts} onDismiss={dismissToast} />}
         <InstallPrompt eligible={progress.stats.gamesPlayed > 0} />
         <Dashboard
           progress={progress}
@@ -1084,6 +1073,7 @@ export default function Game() {
   if (view === "adventure") {
     return <div className="game game-adventure" data-scenery={settings.scenery}>
       {appBar}
+      {toasts.length > 0 && <Toasts toasts={toasts} onDismiss={dismissToast} />}
       <Adventure progress={progress} settings={settings} paused={modalOpen} onComplete={completeAdventure} />
       {modals}
     </div>;

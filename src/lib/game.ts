@@ -323,6 +323,22 @@ export function applyUndo(prev: GameState, current: GameState): GameState {
   };
 }
 
+/** Keyboard keys that move the board: arrows, WASD and vim-style hjkl. */
+export const KEY_MAP: Record<string, Direction> = {
+  ArrowUp: "up",
+  ArrowDown: "down",
+  ArrowLeft: "left",
+  ArrowRight: "right",
+  w: "up",
+  s: "down",
+  a: "left",
+  d: "right",
+  k: "up",
+  j: "down",
+  h: "left",
+  l: "right",
+};
+
 export function canUndo(state: GameState): boolean {
   return !state.timeUp && (state.undosLeft === -1 || state.undosLeft > 0);
 }
