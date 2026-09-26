@@ -8,36 +8,23 @@ export interface Toast {
   kind: "dish" | "achievement" | "info";
   title: string;
   body?: string;
-  /** Dish value for the icon; 0 = wasabi. */
   icon?: number;
 }
+interface Props { toasts: Toast[]; onDismiss: (id: number) => void }
 
-interface Props {
-  toasts: Toast[];
-  onDismiss: (id: number) => void;
-}
-
+/** One in-flow notification rail: celebrations never cover the board. */
 export default function Toasts({ toasts, onDismiss }: Props) {
-  if (toasts.length === 0) return null;
-  return (
-    <div className="toasts" aria-live="polite">
-      {toasts.map((t) => {
-        const style = t.icon === undefined ? null : t.icon === 0 ? SMOKE_STYLE : ninjaFor(t.icon);
-        return (
-          <button
-            key={t.id}
-            className={`toast toast-${t.kind}`}
-            onClick={() => onDismiss(t.id)}
-            type="button"
-          >
-            {style && <NinjaIcon style={style} className="toast-icon" />}
-            <span className="toast-text">
-              <strong>{t.title}</strong>
-              {t.body && <span>{t.body}</span>}
-            </span>
-          </button>
-        );
-      })}
-    </div>
-  );
+  const latest = toasts.findLast((t)=>t.kind==="achievement") ?? toasts.at(-1);
+  const style = latest?.icon === undefined ? null : latest.icon === 0 ? SMOKE_STYLE : ninjaFor(latest.icon);
+  return <div className={`milestone-rail ${latest ? "milestone-active" : ""}`}>
+    <span className="sr-only" role="status" aria-live="polite">{toasts.map((t)=>`${t.title}. ${t.body??""}`).join(" ")}</span>
+    {latest ? <>
+      {style && <NinjaIcon style={style} className="milestone-icon"/>}
+      <details className="milestone-details" key={toasts.map((t)=>t.id).join("-")}>
+        <summary><strong>{latest.title}</strong><span>{latest.body}</span>{toasts.length>1&&<b>+{toasts.length-1} more</b>}</summary>
+        <ul>{toasts.map((t)=><li key={t.id}><strong>{t.title}</strong>{t.body&&<span>{t.body}</span>}</li>)}</ul>
+      </details>
+      <button className="milestone-dismiss" aria-label="Dismiss all milestones" onClick={()=>toasts.forEach((t)=>onDismiss(t.id))}>×</button>
+    </> : <span className="milestone-rest">忍 <span>One move at a time.</span></span>}
+  </div>;
 }

@@ -38,6 +38,7 @@ export default function Tile({ tile, size }: Props) {
         style={{ background: style.bg, color: style.fg, "--tile-ink": style.suit, "--tile-accent": style.accent } as CSSProperties}
         title={style.name}
       >
+        {tile.merged && <span className="merge-smoke" aria-hidden="true"><i /><i /><i /><b /></span>}
         <NinjaIcon style={style} className="tile-art" />
         <span className="tile-label">{style.name}</span>
         {!tile.wasabi && <span className="tile-value">{tile.value}</span>}

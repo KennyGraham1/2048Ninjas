@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { BOARD_SIZES } from "@/lib/game";
 import { ACHIEVEMENTS, dailyStreak, type Progress } from "@/lib/progress";
+import { ADVENTURE, CHAPTERS } from "@/lib/adventure";
 import { weeklyChallenge } from "@/lib/engagement";
 import { fetchBoard } from "@/lib/online";
 import LevelBar from "./LevelBar";
@@ -25,6 +26,7 @@ interface Props {
   onRace: () => void;
   onPuzzles: () => void;
   onWeekly: () => void;
+  onAdventure: () => void;
   onOpen: (panel: "stats" | "collection" | "achievements" | "leaderboard" | "coach") => void;
   online: boolean;
   playerName: string;
@@ -59,6 +61,7 @@ export default function Dashboard({
   onRace,
   onPuzzles,
   onWeekly,
+  onAdventure,
   onOpen,
   online,
   playerName,
@@ -122,6 +125,11 @@ export default function Dashboard({
         <span className="hero-seal" aria-hidden="true">忍<span>SHINOBI</span></span>
       </section>
 
+      <button className="adventure-invite" onClick={onAdventure}>
+        <span className="adventure-invite-art" aria-hidden="true">{CHAPTERS.map((c) => <i key={c.name}>{c.symbol}</i>)}</span>
+        <span className="adventure-invite-copy"><span className="eyebrow">STORY MISSIONS · NEW BACKDROPS TO EARN</span><strong>The path of the shinobi</strong><span>Nine missions. Three lands. A home for your clan.</span></span>
+        <span className="adventure-invite-action">{ADVENTURE.filter((m) => progress.adventure?.[m.id]).length}/9 complete <b>Begin your journey ↗</b></span>
+      </button>
       <div className="dojo-facts">
         <span><b>01</b> Swipe to move</span><span><b>02</b> Merge matching ninjas</span><span><b>03</b> Reach the Sensei</span>
       </div>

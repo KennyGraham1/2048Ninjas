@@ -37,6 +37,9 @@ import { loadJson, removeKey, saveJson, clearAll } from "@/lib/storage";
 import { DEFAULT_SETTINGS, MODES, applyTheme, type Settings } from "@/lib/settings";
 import Race from "./Race";
 import Dashboard from "./Dashboard";
+import Adventure from "./Adventure";
+import NextRankGoal from "./NextRankGoal";
+import { recordAdventure, sceneryUnlocked } from "@/lib/adventure";
 import InstallPrompt from "./InstallPrompt";
 import DishStrip from "./DishStrip";
 import PuzzleList from "./PuzzleList";
@@ -82,7 +85,7 @@ const TOAST_MS = 3500;
 const POPUP_MS = 900;
 
 type Panel = "stats" | "collection" | "achievements" | "leaderboard" | "settings" | "coach" | "howto";
-type View = "home" | "play" | "puzzles";
+type View = "home" | "play" | "puzzles" | "adventure";
 
 const KEY_MAP: Record<string, Direction> = {
   ArrowUp: "up",
@@ -263,7 +266,7 @@ export default function Game() {
   const addToast = useCallback(
     (toast: Omit<Toast, "id">) => {
       const id = nextToastId.current++;
-      setToasts((t) => [...t.slice(-2), { ...toast, id }]);
+      setToasts((t) => [...t.slice(-5), { ...toast, id }]);
       later(() => setToasts((t) => t.filter((x) => x.id !== id)), TOAST_MS);
     },
     [later],
@@ -308,6 +311,7 @@ export default function Game() {
       saveJson("settings", s);
       saveJson("shadow-dojo-intro", true);
     }
+    if (!sceneryUnlocked(p,s.scenery)) s.scenery = "rooftops";
     applyTheme(s.theme);
     setSoundEnabled(s.sound);
     const g = loadGame(s) ?? createGame(s);
@@ -323,7 +327,7 @@ export default function Game() {
     // Come back to the game you were in (timed/race/puzzle boards don't survive a reload).
     const lastView = loadJson<View>("view", "home");
     if (chDate) setView("play");
-    else if (lastView === "puzzles") setView("puzzles");
+    else if (lastView === "puzzles" || lastView === "adventure") setView(lastView);
     else if (lastView === "play" && (s.mode === "classic" || s.mode === "daily" || s.mode === "weekly")) setView("play");
     // The entrance and arena explain the basics inline; help stays available in the app bar.
     setReady(true);
@@ -368,19 +372,18 @@ export default function Game() {
 
   const celebrateAchievements = useCallback(
     (list: Achievement[]) => {
-      list.forEach((a, i) =>
-        later(
-          () =>
-            addToast({ kind: "achievement", title: "Achievement unlocked", body: a.name, icon: a.icon }),
-          i * 400,
-        ),
-      );
+      if (list.length) addToast({
+        kind: "achievement",
+        title: list.length === 1 ? "Achievement unlocked" : `${list.length} achievements unlocked`,
+        body: list.map((a) => a.name).join(" · "),
+        icon: list[list.length - 1].icon,
+      });
       if (list.length) {
         sounds.achievement();
         if (settingsRef.current.haptics) vibrate([20, 40, 20]);
       }
     },
-    [addToast, later],
+    [addToast],
   );
 
   /** Apply a progress update, celebrating anything new. */
@@ -405,9 +408,7 @@ export default function Game() {
       progressRef.current = res.progress;
       const xp = hit.reduce((a, m) => a + m.xp, 0);
       applyProgress(addXp(progressRef.current, g, xp));
-      hit.forEach((m, i) =>
-        later(() => addToast({ kind: "achievement", title: `Mission complete · +${m.xp} XP`, body: m.text, icon: 64 }), i * 400),
-      );
+      addToast({ kind: "achievement", title: `${hit.length === 1 ? "Mission complete" : `${hit.length} missions complete`} · +${xp} XP`, body: hit.map((m) => m.text).join(" · "), icon: 64 });
       sounds.achievement();
       const all = dailyMissions(today).every((m) => progressRef.current.missions[today]?.includes(m.id));
       if (all) later(() => addToast({ kind: "info", title: "All missions done!", body: "Come back tomorrow for three more." }), 1400);
@@ -597,8 +598,8 @@ export default function Game() {
       // Remove merge ghosts once the slide animation has finished.
       later(() => {
         const cur = stateRef.current;
-        if (cur === next) commit(settle(cur));
-      }, 160);
+        if (cur && cur.moves === next.moves) commit(settle(cur));
+      }, 520);
       if (coachThis) {
         later(() => {
           const note = reviewMove(prev, dir, next);
@@ -665,10 +666,14 @@ export default function Game() {
     clearAll();
     progressRef.current = EMPTY_PROGRESS;
     setProgress(EMPTY_PROGRESS);
+    settingsRef.current = { ...settingsRef.current, scenery: "rooftops" };
+    setSettings(settingsRef.current);
     saveJson("settings", settingsRef.current);
+    stateRef.current = null;
     startNewGame();
     setPanel(null);
-    addToast({ kind: "info", title: "Progress reset", body: "Fresh plate, fresh start." });
+    setView("home");
+    addToast({ kind: "info", title: "Progress reset", body: "A new journey begins." });
   }, [addToast, startNewGame]);
 
   // Pause the timed clock while the tab is hidden by shifting the start time forward.
@@ -819,6 +824,14 @@ export default function Game() {
   const goHome = useCallback(() => {
     setAutoplay(false);
     setView("home");
+  }, []);
+
+  const completeAdventure = useCallback((id: string, game: GameState) => {
+    const next = recordAdventure(progressRef.current, id, game);
+    if (next === progressRef.current) return;
+    progressRef.current = next;
+    setProgress(next);
+    saveJson("progress", next);
   }, []);
 
   const play = useCallback(
@@ -1045,7 +1058,7 @@ export default function Game() {
 
   if (view === "home") {
     return (
-      <div className="game game-home">
+      <div className="game game-home" data-scenery={settings.scenery}>
         {appBar}
         <InstallPrompt eligible={progress.stats.gamesPlayed > 0} />
         <Dashboard
@@ -1058,6 +1071,7 @@ export default function Game() {
           onRace={() => play({ mode: "race" })}
           onPuzzles={() => setView("puzzles")}
           onWeekly={() => play({ mode: "weekly" })}
+          onAdventure={() => { setAutoplay(false); setView("adventure"); }}
           onOpen={(p) => setPanel(p)}
           online={settings.online}
           playerName={settings.playerName}
@@ -1067,9 +1081,17 @@ export default function Game() {
     );
   }
 
+  if (view === "adventure") {
+    return <div className="game game-adventure" data-scenery={settings.scenery}>
+      {appBar}
+      <Adventure progress={progress} settings={settings} paused={modalOpen} onComplete={completeAdventure} />
+      {modals}
+    </div>;
+  }
+
   if (view === "puzzles") {
     return (
-      <div className="game game-home">
+      <div className="game game-home" data-scenery={settings.scenery}>
         {appBar}
         <PuzzleList progress={progress} onPuzzle={(id) => play({ mode: "puzzle", puzzleId: id })} />
         {modals}
@@ -1079,7 +1101,7 @@ export default function Game() {
 
   if (settings.mode === "race") {
     return (
-      <div className="game game-race">
+      <div className="game game-race" data-scenery={settings.scenery}>
         {appBar}
         <p className="context-line">
           <span className="mode-badge">Race</span>
@@ -1138,7 +1160,7 @@ export default function Game() {
   const rank = showOver ? leaderboardRank(progress, state.score) : null;
 
   return (
-    <div className="game game-arena">
+    <div className="game game-arena" data-scenery={settings.scenery}>
       <div className="sr-only" role="status" aria-live="polite">
         {announce}
       </div>
@@ -1146,6 +1168,7 @@ export default function Game() {
       {appBar}
 
       <div className="arena-heading"><div><span className="eyebrow">THE SHADOW DOJO</span><h1>Find your flow.</h1></div><span className="arena-live"><i /> {state.over ? "RUN COMPLETE" : "TRAINING IN PROGRESS"}</span></div>
+      <Toasts toasts={toasts} onDismiss={dismissToast} />
       <div className="arena-layout">
       <div className="arena-main">
       <header className="play-header">
@@ -1424,6 +1447,7 @@ export default function Game() {
       <div className="arena-instructions"><span>Swipe or use arrow keys</span><span>Match. Merge. Ascend. ↗</span></div>
       </div>
       <aside className="arena-sidebar">
+        <NextRankGoal state={state} />
         <section className="rank-card">
           <span className="eyebrow">YOUR STRONGEST NINJA</span>
           <div className="rank-portrait"><NinjaIcon style={topStyle} /><span className="rank-orbit" /></div>
@@ -1452,7 +1476,6 @@ export default function Game() {
 
       </aside>
       </div>
-      <Toasts toasts={toasts} onDismiss={dismissToast} />
       {modals}
     </div>
   );

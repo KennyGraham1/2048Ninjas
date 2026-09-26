@@ -40,6 +40,8 @@ export interface PuzzleResult {
 }
 
 export interface Progress {
+  /** Adventure is optional so saves from earlier versions stay compatible. */
+  adventure?: Record<string, import("./adventure").AdventureResult>;
   stats: Stats;
   /** Dish value -> ISO date it was first reached. */
   passport: Record<string, string>;

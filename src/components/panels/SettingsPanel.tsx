@@ -1,3 +1,4 @@
+import { SCENERIES, sceneryUnlocked } from "@/lib/adventure";
 import { SKINS } from "@/lib/engagement";
 import type { Progress } from "@/lib/progress";
 import { RACE_TARGETS, THEMES, type Settings } from "@/lib/settings";
@@ -88,6 +89,17 @@ export default function SettingsPanel({ settings, progress, onChange, onResetPro
         </div>
       </fieldset>
 
+      <fieldset className="setting-group">
+        <legend>Dojo backdrop</legend>
+        <p className="muted small">Earn new training grounds by completing Adventure chapters.</p>
+        <div className="theme-grid">
+          {SCENERIES.map((scene) => { const unlocked=sceneryUnlocked(progress,scene.id); return (
+            <button key={scene.id} className={`theme-card scenery-choice scenery-${scene.id} ${settings.scenery===scene.id ? "theme-card-active" : ""}`} disabled={!unlocked} aria-pressed={settings.scenery===scene.id} onClick={()=>onChange({scenery:scene.id})}>
+              <span className="scenery-preview" aria-hidden="true" /><strong>{scene.name}</strong><span>{unlocked ? "Ready to equip" : scene.description}</span>
+            </button>
+          )})}
+        </div>
+      </fieldset>
       <fieldset className="setting-group">
         <legend>Feel</legend>
         <Toggle

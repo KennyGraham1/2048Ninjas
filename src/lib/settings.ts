@@ -5,6 +5,7 @@ export type Theme = "dojo" | "auto" | "light" | "dark" | "tatami";
 export type AppMode = Mode | "race" | "weekly";
 
 export interface Settings {
+  scenery: import("./adventure").Scenery;
   theme: Theme;
   sound: boolean;
   haptics: boolean;
@@ -28,6 +29,7 @@ export interface Settings {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
+  scenery: "rooftops",
   theme: "dojo",
   sound: true,
   haptics: true,

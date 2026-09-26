@@ -135,7 +135,7 @@ export default function Race({ target, wasabi, onFinish }: Props) {
           raceRef.current = { ...c, players: settled };
           setRace(raceRef.current);
         }
-      }, 160);
+      }, 520);
     },
     [later, target, onFinish],
   );

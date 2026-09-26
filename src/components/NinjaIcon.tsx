@@ -1,3 +1,4 @@
+import { RearGear, FrontGear } from "./NinjaGear";
 import type { NinjaStyle } from "@/lib/ninjas";
 
 /** Original vector characters stay sharp on every board size and share card. */
@@ -21,14 +22,9 @@ export default function NinjaIcon({ style, className }: { style: NinjaStyle; cla
       ) : (
         <>
           <ellipse cx="50" cy="91" rx="28" ry="5" fill={suit} opacity="0.15" />
-          {rank >= 4 && (
-            <g stroke="#273246" strokeWidth="5" strokeLinecap="round">
-              <path d="m21 34 54 49" /><path d="m19 42 9-10" />
-              {rank >= 8 && <><path d="m79 34-54 49" /><path d="m72 32 9 10" /></>}
-            </g>
-          )}
+          <RearGear rank={rank} suit={suit} accent={accent} />
           <path d="M34 65Q22 66 21 81L32 84 38 75M66 65Q78 66 79 81L68 84 62 75" fill={suit} />
-          <path d="M33 63h34l8 25H57l-7-10-7 10H25Z" fill={suit} />
+          <path d={rank === 2 || rank === 5 ? "M33 63h34l14 19-8 8-23-13-14 16H19l13-15Z" : rank === 6 || rank === 10 || rank === 11 ? "M33 63h34l12 29-16-3-13 5-13-5-16 3Z" : "M33 63h34l8 25H57l-7-10-7 10H25Z"} fill={suit} />
           <path d="m37 63 24 19M63 63 39 82" fill="none" stroke={accent} strokeWidth="4" opacity="0.65" />
           <path d="M30 78h40v7H30Z" fill={accent} />
           <path d="m56 82 8 12 6-4-10-10" fill={accent} />
@@ -46,6 +42,7 @@ export default function NinjaIcon({ style, className }: { style: NinjaStyle; cla
           ) : (
             <path d="m42 27 5 3 3-6 3 6 5-3-2 9H44Z" fill={suit} />
           )}
+          <FrontGear rank={rank} suit={suit} accent={accent} />
           {rank >= 10 && <path d="m9 54 2 5 5 2-5 2-2 5-2-5-5-2 5-2Zm78 10 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill={accent} />}
           {rank >= 14 && <path d="m33 7 8 3 9-7 9 7 8-3" fill="none" stroke={accent} strokeWidth="3" strokeLinecap="round" />}
         </>
