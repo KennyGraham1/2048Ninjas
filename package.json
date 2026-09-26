@@ -1,0 +1,30 @@
+{
+  "name": "ninjas-2048",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 2048",
+    "build": "next build",
+    "start": "next start -p 2048",
+    "lint": "eslint",
+    "test": "vitest run",
+    "phone": "node scripts/phone.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^24.13.6",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.5",
+    "qrcode-terminal": "^0.12.0",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^5.0.1"
+  }
+}
