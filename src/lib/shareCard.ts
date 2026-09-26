@@ -43,14 +43,14 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
   const ctx = canvas.getContext("2d")!;
 
   // Background
-  ctx.fillStyle = "#f0f3f8";
+  ctx.fillStyle = "#0b1212";
   ctx.fillRect(0, 0, W, H);
 
   // Header
-  ctx.fillStyle = "#c43d51";
+  ctx.fillStyle = "#c5ed70";
   roundRect(ctx, 60, 60, 72, 72, 18);
   ctx.fill();
-  ctx.fillStyle = "#25334a";
+  ctx.fillStyle = "#253e3c";
   roundRect(ctx, 74, 70, 44, 52, 20);
   ctx.fill();
   ctx.fillStyle = "#f4d7b6";
@@ -67,15 +67,15 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
   ctx.lineTo(107, 98);
   ctx.stroke();
 
-  ctx.fillStyle = "#25334a";
-  ctx.font = "800 44px Nunito, system-ui, sans-serif";
+  ctx.fillStyle = "#edf0e4";
+  ctx.font = "800 44px Avenir Next, system-ui, sans-serif";
   ctx.textBaseline = "middle";
   ctx.fillText("2048 Ninjas", 152, 96);
 
-  ctx.font = "800 64px Nunito, system-ui, sans-serif";
+  ctx.font = "800 64px Avenir Next, system-ui, sans-serif";
   ctx.fillText(title, 60, 210);
-  ctx.fillStyle = "#64728a";
-  ctx.font = "600 30px Nunito, system-ui, sans-serif";
+  ctx.fillStyle = "#91a49a";
+  ctx.font = "600 30px Avenir Next, system-ui, sans-serif";
   ctx.fillText(subtitle, 60, 268);
 
   // Board
@@ -84,7 +84,7 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
   const bx = 60;
   const by = 330;
   const gap = 18;
-  ctx.fillStyle = "#e0e6ef";
+  ctx.fillStyle = "#111d1b";
   roundRect(ctx, bx, by, boardSize, boardSize, 28);
   ctx.fill();
   const cell = (boardSize - gap * (n + 1)) / n;
@@ -107,19 +107,19 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
       const x = bx + gap + c * (cell + gap);
       const y = by + gap + r * (cell + gap);
       const t = tiles.get(`${r},${c}`);
-      ctx.fillStyle = "#d2dbe8";
+      ctx.fillStyle = "#172322";
       roundRect(ctx, x, y, cell, cell, 20);
       ctx.fill();
       if (!t) continue;
       const style = t.wasabi ? SMOKE_STYLE : ninjaFor(t.value);
-      ctx.fillStyle = style.bg;
+      ctx.fillStyle = "#192824";
       roundRect(ctx, x, y, cell, cell, 20);
       ctx.fill();
       const img = images.get(t.wasabi ? 0 : t.value);
       const artSize = cell * 0.58;
       if (img) ctx.drawImage(img, x + (cell - artSize) / 2, y + cell * 0.08, artSize, artSize);
-      ctx.fillStyle = style.fg;
-      ctx.font = `800 ${Math.max(16, Math.min(28, cell * 0.11))}px Nunito, system-ui, sans-serif`;
+      ctx.fillStyle = style.accent;
+      ctx.font = `800 ${Math.max(16, Math.min(28, cell * 0.11))}px Avenir Next, system-ui, sans-serif`;
       ctx.textAlign = "center";
       ctx.fillText(style.name, x + cell / 2, y + cell * 0.82, cell - 12);
       ctx.textAlign = "left";
@@ -127,8 +127,8 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
   }
 
   // Footer
-  ctx.fillStyle = "#64728a";
-  ctx.font = "600 28px Nunito, system-ui, sans-serif";
+  ctx.fillStyle = "#91a49a";
+  ctx.font = "600 28px Avenir Next, system-ui, sans-serif";
   ctx.fillText(`Highest ninja: ${ninjaFor(highestTile(state)).name}  ·  ${url}`, 60, H - 40);
 
   return new Promise((resolve, reject) =>

@@ -303,6 +303,11 @@ export default function Game() {
         );
       }
     }
+    if (!loadJson("shadow-dojo-intro", false)) {
+      s.theme = "dojo";
+      saveJson("settings", s);
+      saveJson("shadow-dojo-intro", true);
+    }
     applyTheme(s.theme);
     setSoundEnabled(s.sound);
     const g = loadGame(s) ?? createGame(s);
@@ -320,7 +325,7 @@ export default function Game() {
     if (chDate) setView("play");
     else if (lastView === "puzzles") setView("puzzles");
     else if (lastView === "play" && (s.mode === "classic" || s.mode === "daily" || s.mode === "weekly")) setView("play");
-    if (!loadJson("seen-howto", false) && p.stats.gamesPlayed === 0) setPanel("howto");
+    // The entrance and arena explain the basics inline; help stays available in the app bar.
     setReady(true);
 
     const wake = () => unlockAudio();
@@ -1013,7 +1018,7 @@ export default function Game() {
         )}
         <span className="wordmark">
           <Logo className="wordmark-icon" />
-          2048 Ninjas
+          <span>2048 <b>NINJAS</b></span>
         </span>
       </div>
       <div className="appbar-right">
@@ -1133,13 +1138,16 @@ export default function Game() {
   const rank = showOver ? leaderboardRank(progress, state.score) : null;
 
   return (
-    <div className="game">
+    <div className="game game-arena">
       <div className="sr-only" role="status" aria-live="polite">
         {announce}
       </div>
 
       {appBar}
 
+      <div className="arena-heading"><div><span className="eyebrow">THE SHADOW DOJO</span><h1>Find your flow.</h1></div><span className="arena-live"><i /> {state.over ? "RUN COMPLETE" : "TRAINING IN PROGRESS"}</span></div>
+      <div className="arena-layout">
+      <div className="arena-main">
       <header className="play-header">
         <div className="context">
           <span className="context-badges">
@@ -1413,6 +1421,18 @@ export default function Game() {
         </aside>
       )}
 
+      <div className="arena-instructions"><span>Swipe or use arrow keys</span><span>Match. Merge. Ascend. ↗</span></div>
+      </div>
+      <aside className="arena-sidebar">
+        <section className="rank-card">
+          <span className="eyebrow">YOUR STRONGEST NINJA</span>
+          <div className="rank-portrait"><NinjaIcon style={topStyle} /><span className="rank-orbit" /></div>
+          <span className="rank-number">RANK {topStyle.rank + 1} / 17</span><h2>{topStyle.name}</h2>
+          <p>{topStyle.description}</p>
+          <div className="rank-track" role="progressbar" aria-label="Ninja rank" aria-valuenow={topStyle.rank + 1} aria-valuemin={1} aria-valuemax={17}><span style={{ width: `${(topStyle.rank + 1) / 17 * 100}%` }} /></div>
+          <div className="run-facts"><span><b>{state.moves}</b> MOVES</span><span><b>{state.combo ?? 0}×</b> COMBO</span><span><b>{emptyCells}</b> FREE</span></div>
+        </section>
+        <section className="sensei-note"><span className="eyebrow">A WORD FROM SENSEI</span><p>“A patient ninja controls the board.”</p><span>Keep your strongest ninja in a corner. Build the rest of your clan around it.</span><button className="link" onClick={() => setPanel("coach")}>Study the strategy ↗</button></section>
       <DishStrip
         top={top}
         wasabi={state.wasabiEnabled}
@@ -1430,6 +1450,8 @@ export default function Game() {
         </p>
       </footer>
 
+      </aside>
+      </div>
       <Toasts toasts={toasts} onDismiss={dismissToast} />
       {modals}
     </div>

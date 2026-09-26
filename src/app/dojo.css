@@ -1,0 +1,153 @@
+/* Shadow Dojo: ink, acid green, and cut-paper silhouettes. */
+:root, :root[data-theme="dojo"], :root[data-theme="dark"] {
+  --bg: #0b1212; --fg: #edf0e4; --muted: #91a49a; --panel: #172322;
+  --panel-dark: #2b3b36; --cell: #17211f; --card: #111d1b;
+  --line: #293b33; --accent: #c5ed70; --accent-dark: #add953; --accent-fg: #142015;
+  --overlay: rgba(9, 18, 16, .93); --shadow: 0 24px 80px #0007; --radius: 12px;
+  --gap: clamp(6px, 1.1vw, 10px); --slide: 135ms; color-scheme: dark;
+}
+:root[data-theme="light"] { --bg:#f0f1e8; --fg:#1d3029; --muted:#5d7166; --panel:#dde4d7; --panel-dark:#b8c7ae; --cell:#e0e6d9; --card:#f9faf4; --line:#cbd7c3; --accent:#426819; --accent-dark:#304c11; --accent-fg:#fff; --overlay:#f0f1e8ef; color-scheme:light; }
+:root[data-theme="tatami"] { --bg:#14241c; --fg:#edf2d9; --muted:#a6b59a; --panel:#213629; --panel-dark:#3c5339; --cell:#263b2c; --card:#1b2d21; --line:#3a5036; --accent:#d6d99a; --accent-dark:#bfc57b; --accent-fg:#1a2c1c; --overlay:#14241cef; color-scheme:dark; }
+@media(prefers-color-scheme:light) { :root:not([data-theme]) { --bg:#f0f1e8; --fg:#1d3029; --muted:#5d7166; --panel:#dde4d7; --panel-dark:#b8c7ae; --cell:#e0e6d9; --card:#f9faf4; --line:#cbd7c3; --accent:#426819; --accent-dark:#304c11; --accent-fg:#fff; --overlay:#f0f1e8ef; color-scheme:light; } }
+body { font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif; background-image: radial-gradient(ellipse at 80% 0%, #8199630b, transparent 50%); }
+button,input { font-family: inherit; }
+.page { padding: 0 max(24px,env(safe-area-inset-right)) 32px max(24px,env(safe-area-inset-left)); }
+.game { width:min(100%, 1080px); gap:24px; }
+.appbar { position:relative; top:0; margin:0; padding:22px 0; border-bottom:1px solid var(--line); background:transparent; backdrop-filter:none; }
+.wordmark { gap:10px; font-size:20px; letter-spacing:-1px; }
+.wordmark b { letter-spacing:2px; font-size:13px; margin-left:5px; }
+.wordmark-icon { width:32px; height:32px; }
+.icon-btn { border-radius:50%; width:36px; height:36px; color:var(--muted); }
+.icon-btn:hover { background:var(--panel); color:var(--accent); }
+.btn { min-height:40px; border-radius:7px; padding:10px 16px; font-size:12px; font-weight:700; letter-spacing:.02em; background:var(--panel); border:1px solid var(--line); transition:transform 160ms, background 160ms, border-color 160ms; }
+.btn:hover { border-color:var(--accent); transform:translateY(-2px); }
+.btn-primary { background:var(--accent); color:var(--accent-fg); border-color:var(--accent); box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 38%,transparent); }
+.btn-primary:hover { background:var(--accent-dark); }
+.link { color:var(--accent); text-underline-offset:4px; font-size:12px; }
+.eyebrow { font-size:10px; letter-spacing:2px; font-weight:700; color:var(--muted); line-height:1.5; }
+.eyebrow i,.arena-live i { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--accent); margin-right:8px; box-shadow:0 0 12px color-mix(in srgb,var(--accent) 40%,transparent); }
+.dojo-home { gap:0; }
+.dojo-hero { position:relative; isolation:isolate; display:grid; grid-template-columns:1.05fr 1fr; align-items:center; min-height:430px; overflow:hidden; }
+.hero-copy { position:relative; z-index:2; padding:42px 0 34px; }
+.hero-copy h1 { font-size:clamp(48px,6vw,76px); line-height:1.02; font-weight:850; letter-spacing:-4px; margin:22px 0; }
+.hero-copy h1 em { color:var(--accent); font-style:normal; }
+.hero-copy p { color:var(--muted); font-size:14px; line-height:1.8; margin:0 0 28px; }
+.hero-launch { display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+.launch-button { font-size:14px; padding:17px 22px; min-width:208px; justify-content:space-between; }
+.launch-button span { font-size:23px; line-height:1; }
+.hero-footnote { display:block; margin-top:18px; color:var(--muted); letter-spacing:1.3px; font-size:8px; }
+.hero-footnote b { padding:0 5px; }
+.segmented { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:3px; }
+.segmented button { padding:8px; color:var(--muted); border-radius:3px; font-size:10px; }
+.segmented .seg-active { background:var(--accent); color:var(--accent-fg); box-shadow:none; }
+.dojo-scene { width:112%; margin-left:-6%; align-self:end; }
+.hero-seal { position:absolute; right:14px; top:44px; color:var(--accent); font-size:36px; line-height:1; text-align:center; opacity:.65; }
+.hero-seal span { display:block; font-size:7px; letter-spacing:2px; margin-top:6px; }
+.dojo-facts { display:flex; justify-content:space-between; border-block:1px solid var(--line); padding:20px 0; color:var(--muted); font-size:11px; }
+.dojo-facts b { font-family:monospace; color:var(--accent); margin-right:14px; font-size:10px; }
+.dojo-section-heading { display:flex; justify-content:space-between; gap:16px; align-items:end; margin:44px 0 22px; }
+.dojo-section-heading h2 { margin:7px 0 0; font-size:25px; letter-spacing:-.8px; font-weight:700; }
+.streak-counter { font:9px monospace; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
+.mission-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.mission-card { --mission:#c5ed70; position:relative; text-align:left; padding:24px; border:1px solid var(--line); border-radius:10px; color:var(--fg); background:linear-gradient(145deg,color-mix(in srgb,var(--mission) 5%,var(--card)),var(--card) 65%); cursor:pointer; overflow:hidden; transition:transform 200ms,border-color 200ms; }
+.mission-card:hover { transform:translateY(-5px); border-color:var(--mission); }
+.mission-orange { --mission:#ffa17a; } .mission-purple { --mission:#c5abf4; } .mission-blue { --mission:#93cbe5; } .mission-gold { --mission:#efce80; }
+.mission-number { display:block; font:11px monospace; color:var(--muted); margin-bottom:44px; }
+.mission-art { width:76px; height:76px; position:absolute; top:12px; right:14px; transform:rotate(-7deg); filter:drop-shadow(0 8px 14px #0005); transition:transform 200ms; }
+.mission-card:hover .mission-art { transform:rotate(4deg) translateY(-4px); }
+.mission-card .eyebrow { font-size:8px; color:var(--mission); letter-spacing:1.3px; }
+.mission-card h3 { font-size:23px; letter-spacing:-.8px; margin:8px 0 10px; font-weight:750; }
+.mission-card p { color:var(--muted); font-size:12px; line-height:1.7; margin:0 0 22px; min-height:61px; }
+.mission-action { display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:700; padding-top:15px; border-top:1px solid var(--line); }
+.mission-action>span { font-size:20px; color:var(--mission); }
+.dojo-progress { display:grid; grid-template-columns:.8fr 1.2fr; gap:14px; }
+.level { border-radius:10px; padding:24px; gap:12px; }
+.level-badge { background:var(--accent); color:var(--accent-fg); padding:16px 10px; }
+.level-text { align-items:flex-start; flex-direction:column; gap:6px; }
+.level-text strong { font-size:22px; }
+.level-text .small { font-size:10px; }
+.level-bar { background:var(--panel-dark); height:4px; }
+.level-bar span { background:var(--accent); }
+.missions { border-radius:10px; padding:22px; }
+.missions-head { margin-bottom:18px; }
+.missions-head strong { font-size:14px; }.missions-head .small { font-size:9px; }
+.missions li { font-size:11px; gap:10px; padding:5px 0; }
+.mission-check { width:17px; height:17px; border-width:1px; border-radius:4px; }
+.mission-xp { font-size:10px; }
+.other-runs { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin:20px 0; }
+.dojo-vault { display:grid; grid-template-columns:repeat(4,1fr); border-block:1px solid var(--line); margin-top:28px; }
+.dojo-vault button { display:flex; flex-direction:column; gap:12px; align-items:flex-start; padding:26px 20px; border:0; border-right:1px solid var(--line); color:var(--fg); background:transparent; text-align:left; cursor:pointer; }
+.dojo-vault button:last-child { border-right:0; }.dojo-vault button:hover { background:var(--card); }
+.dojo-vault button>span:first-child { font-size:8px; letter-spacing:1.5px; color:var(--muted); }
+.dojo-vault strong { font-size:31px; font-weight:650; letter-spacing:-1px; }.dojo-vault small { font-size:16px; color:var(--muted); }
+.dojo-vault button>span:last-child { font-size:11px; color:var(--muted); }
+.dojo-footer { display:flex; justify-content:space-between; align-items:center; padding:30px 0 0; color:var(--muted); font-size:10px; }.dojo-footer>span:first-child { font-weight:800; letter-spacing:2px; }.dojo-footer>span:last-child { font-size:28px; color:var(--accent); }
+/* The arena gives the board its own space and puts progression in the periphery. */
+.arena-heading { display:flex; align-items:center; justify-content:space-between; margin:5px 0 0; }.arena-heading h1 { font-size:36px; letter-spacing:-1.8px; line-height:1.15; margin:6px 0 0; font-weight:750; }
+.arena-live { font-size:8px; letter-spacing:1.2px; color:var(--muted); }
+.arena-layout { display:grid; grid-template-columns:minmax(0,600px) minmax(0,300px); gap:40px; justify-content:space-between; }
+.arena-main { display:flex; flex-direction:column; gap:16px; min-width:0; }
+.play-header { display:flex; align-items:center; padding:0; gap:12px; }
+.context { gap:9px; }.context-text { font-size:10px; }.mode-badge { border:1px solid var(--line); background:var(--card); color:var(--accent); border-radius:3px; font-size:9px; letter-spacing:1px; padding:6px 8px; }
+.scores { gap:8px; }.score-box { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:10px 16px; min-width:83px; }
+.score-label { font-size:8px; letter-spacing:1.4px; }.score-value { font-family:monospace; font-size:25px; font-weight:600; }.score-box:first-child .score-value { color:var(--accent); }
+.toolbar { order:3; }.toolbar-buttons { width:100%; display:flex; gap:8px; }.toolbar .btn { font-size:10px; min-height:38px; padding:9px 12px; }.toolbar .btn-primary { margin-left:auto; }
+.board-wrap { order:2; border:1px solid var(--line); padding:7px; border-radius:13px; background:var(--card); box-shadow:0 20px 65px #0003; }
+.board { background:var(--bg); border:0; border-radius:8px; box-shadow:none; }
+.board-cell { border:1px solid color-mix(in srgb,var(--line) 40%,transparent); border-radius:6px; background:var(--cell); }
+.tile-inner { background:linear-gradient(145deg,color-mix(in srgb,var(--tile-ink) 28%,#14201e),#15201e) !important; color:var(--tile-accent) !important; border:1px solid color-mix(in srgb,var(--tile-accent) 30%,transparent); box-shadow:inset 0 2px 0 color-mix(in srgb,var(--tile-accent) 12%,transparent),0 3px 5px #0003; border-radius:6px; justify-content:flex-end; padding-bottom:9%; gap:0; }
+.tile-art { width:72%; height:67%; filter:drop-shadow(0 4px 3px #0005); }
+.tile-label { font-size:clamp(7px,1vw,10px); font-weight:650; line-height:1.2; color:#e0e9df; letter-spacing:.1px; }
+.tile-value { top:7px; left:9px; right:auto; font:700 clamp(10px,1.6vw,17px) monospace; opacity:1; }
+.tile-small .tile-value { top:4px; left:5px; font-size:10px; }.tile-small .tile-label { font-size:clamp(6px,.8vw,9px); }.tile-small .tile-art { width:69%; height:63%; }
+.tile-merged .tile-inner { animation:ninja-strike 360ms cubic-bezier(.2,.8,.2,1); }
+.tile-merged .tile-inner::after { content:""; position:absolute; width:150%; height:2px; top:44%; left:-25%; background:#f2ffd8; transform:rotate(-35deg); box-shadow:0 0 12px var(--tile-accent); animation:blade-flash 360ms ease-out forwards; pointer-events:none; }
+.tile-new .tile-inner { animation:smoke-arrival 220ms ease-out; }
+.tile-wasabi .tile-inner { border:1px dashed #c5abf4; box-shadow:inset 0 0 20px #c5abf41a; }
+.arena-main>.coach-card { order:4; }.arena-instructions { order:5; display:flex; justify-content:space-between; color:var(--muted); font-size:10px; }
+.arena-sidebar { display:flex; flex-direction:column; gap:22px; min-width:0; }
+.rank-card { position:relative; padding:23px; border:1px solid var(--line); background:var(--card); border-radius:10px; text-align:center; overflow:hidden; }
+.rank-card>.eyebrow { font-size:8px; }.rank-portrait { width:160px; height:160px; margin:10px auto 0; position:relative; }.rank-portrait>svg { position:relative; z-index:1; width:100%; height:100%; padding:15px; filter:drop-shadow(0 10px 9px #0008); }
+.rank-orbit { position:absolute; inset:10px; border:1px solid var(--line); border-radius:50%; box-shadow:0 0 0 15px color-mix(in srgb,var(--accent) 3%,transparent); background:radial-gradient(circle,color-mix(in srgb,var(--accent) 9%,transparent),transparent 70%); }
+.rank-number { color:var(--accent); font:9px monospace; letter-spacing:2px; }.rank-card h2 { margin:8px 0; font-size:27px; letter-spacing:-1px; }.rank-card p { color:var(--muted); font-size:11px; line-height:1.7; margin:0 0 20px; }.rank-track { height:3px; background:var(--panel-dark); }.rank-track span { display:block; height:100%; background:var(--accent); transition:width 300ms; }
+.run-facts { display:flex; justify-content:space-between; margin-top:20px; }.run-facts span { font-size:7px; letter-spacing:1px; color:var(--muted); }.run-facts b { display:block; font:20px monospace; color:var(--fg); margin-bottom:5px; }
+.sensei-note { border-left:2px solid var(--accent); padding:0 0 0 17px; }.sensei-note .eyebrow { font-size:8px; }.sensei-note p { font-size:18px; line-height:1.4; letter-spacing:-.3px; margin:10px 0; }.sensei-note>span:not(.eyebrow) { display:block; font-size:11px; color:var(--muted); line-height:1.8; }.sensei-note .link { display:block; margin-top:12px; font-size:10px; }
+.strip { min-width:0; border-top:1px solid var(--line); padding-top:18px; }.strip-head { flex-wrap:wrap; font-size:10px; }.strip-title { font-size:12px; }.strip-item { width:64px; }.strip-icon { width:44px; height:44px; border-radius:6px; }.strip-name { font-size:9px; }.strip-hint { font-size:9px; }.strip-value { font:8px monospace; }
+.help { font-size:9px; line-height:2; }.help kbd { font-size:9px; }.combo-badge { background:var(--accent); color:var(--accent-fg); border-radius:4px; top:-10px; left:50%; transform:translateX(-50%); font:700 12px monospace; box-shadow:0 0 25px color-mix(in srgb,var(--accent) 20%,transparent); }
+.overlay { border-radius:10px; }.overlay-card h2 { letter-spacing:-1px; }.toast { border:1px solid var(--line); border-radius:8px; background:var(--card); }.toast-achievement { background:var(--accent); color:var(--accent-fg); }.toast-title { font-size:12px; }
+.modal { background:var(--card); border:1px solid var(--line); border-radius:14px; }.modal-header { border-color:var(--line); }.modal-header h2 { letter-spacing:-.5px; }.modal-backdrop { background:#020907b3; backdrop-filter:blur(8px); }.collection-item { border-radius:8px; }.collection-locked { opacity:.45; }
+@keyframes ninja-strike { 0%{transform:scale(.85);filter:brightness(2)} 45%{transform:scale(1.08);filter:brightness(1.35)} 100%{transform:scale(1);filter:brightness(1)} }
+@keyframes blade-flash { 0%{opacity:0;translate:-70% 0} 25%{opacity:1} 100%{opacity:0;translate:70% 0} }
+@keyframes smoke-arrival { from{opacity:0;transform:scale(.75) translateY(8px);filter:blur(5px)} to{opacity:1;transform:scale(1);filter:blur(0)} }
+@media(min-width:900px) { .game-race { width:min(100%,1100px); }.game-race .tile-value { font-size:12px; } }
+@media(max-width:850px) {
+  .mission-grid { grid-template-columns:repeat(2,1fr); }.dojo-hero { grid-template-columns:1.1fr 1fr; }.hero-copy h1 { font-size:57px; }.hero-launch { gap:12px; }.dojo-scene { width:135%; margin-left:-22%; }.hero-seal { top:50px; }
+  .arena-layout { grid-template-columns:minmax(0,1fr) 220px; gap:20px; }.rank-card { padding:17px; }.rank-portrait { width:130px; height:130px; }.rank-card h2 { font-size:24px; }.toolbar .btn { padding:9px; }.tile-value { font-size:12px; }.tile-label { font-size:8px; }
+}
+@media(max-width:640px) {
+  .page { padding:0 max(18px,env(safe-area-inset-right)) 24px max(18px,env(safe-area-inset-left)); }.game { gap:18px; }.appbar { padding:16px 0; }.wordmark { font-size:19px; }.wordmark b { font-size:11px; }.wordmark-icon { width:28px; height:28px; }.appbar-right { gap:2px; }.icon-btn { width:32px; height:32px; }
+  .dojo-hero { display:block; min-height:570px; }.hero-copy { padding-top:30px; }.hero-copy h1 { font-size:58px; letter-spacing:-3px; margin:16px 0; }.hero-copy p { font-size:12px; line-height:1.75; margin-bottom:24px; }.hero-copy>.eyebrow { font-size:8px; }.hero-launch { flex-direction:column; align-items:flex-start; gap:13px; }.launch-button { min-width:200px; padding:15px 18px; }.hero-footnote { font-size:7px; max-width:160px; line-height:1.8; }
+  .dojo-scene { position:absolute; width:320px; right:-83px; bottom:-7px; margin:0; z-index:-1; }.hero-seal { right:6px; top:34px; font-size:29px; }
+  .dojo-facts { gap:12px; padding:18px 0; font-size:9px; line-height:1.5; }.dojo-facts span { flex:1; }.dojo-facts b { display:block; margin-bottom:5px; }
+  .dojo-section-heading { margin:32px 0 18px; align-items:start; }.dojo-section-heading h2 { font-size:23px; max-width:240px; }.dojo-section-heading .eyebrow { font-size:8px; }.streak-counter { display:none; }.dojo-section-heading>.link { max-width:100px; text-align:right; line-height:1.7; font-size:10px; }
+  .mission-grid { gap:10px; }.mission-card { padding:16px; }.mission-art { width:65px; height:65px; top:10px; right:6px; }.mission-number { margin-bottom:48px; font-size:9px; }.mission-card h3 { font-size:21px; }.mission-card .eyebrow { font-size:7px; letter-spacing:.7px; min-height:20px; display:block; }.mission-card p { font-size:10px; min-height:68px; line-height:1.65; margin-bottom:16px; }.mission-action { font-size:9px; gap:5px; }.mission-action>span { font-size:16px; }
+  .dojo-progress { grid-template-columns:1fr; }.level { padding:19px; }.missions { padding:18px; }.dojo-vault { grid-template-columns:repeat(2,1fr); }.dojo-vault button { padding:20px 14px; }.dojo-vault button:nth-child(2) { border-right:0; }.dojo-vault button:nth-child(-n+2) { border-bottom:1px solid var(--line); }.dojo-footer { font-size:8px; gap:12px; }.dojo-footer>span:first-child { font-size:8px; letter-spacing:1px; }
+  .arena-heading { margin-top:3px; }.arena-heading h1 { font-size:29px; }.arena-heading .eyebrow { font-size:8px; }.arena-live { font-size:6px; letter-spacing:.8px; max-width:95px; line-height:1.8; }.arena-live i { width:4px; height:4px; margin-right:4px; }
+  .arena-layout { grid-template-columns:minmax(0,1fr); gap:26px; }.arena-main { gap:12px; }.play-header { gap:8px; }.context-text { font-size:9px; }.context-badges { gap:7px; }.context-badges .link { font-size:9px; }.mode-badge { font-size:7px; padding:5px 7px; }.score-box { padding:9px 10px; min-width:65px; }.score-label { font-size:7px; }.score-value { font-size:23px; }.scores { gap:5px; }.board-wrap { padding:5px; border-radius:10px; }.tile-value { font-size:13px; top:5px; left:6px; }.tile-label { font-size:8px; }.tile-small .tile-label { font-size:6px; }.tile-small .tile-value { font-size:9px; }.tile-inner { padding-bottom:7%; }.tile-art { width:72%; height:64%; }.toolbar-buttons { gap:5px; flex-wrap:wrap; }.toolbar .btn { padding:9px 10px; font-size:9px; }.undo-pips { gap:2px; }.undo-pips i { width:3px; }.arena-instructions { font-size:8px; }
+  .arena-sidebar { display:grid; grid-template-columns:minmax(0,1fr); gap:18px; }.rank-card { display:grid; grid-template-columns:80px 1fr; text-align:left; column-gap:18px; padding:18px; }.rank-card>.eyebrow { grid-column:2; }.rank-portrait { grid-row:1/5; width:80px; height:100px; margin:0; }.rank-portrait>svg { padding:0; }.rank-orbit { inset:15px 0; }.rank-number { font-size:7px; margin-top:10px; }.rank-card h2 { font-size:23px; margin:4px 0; }.rank-card p { grid-column:2; font-size:10px; margin-bottom:14px; }.rank-track { grid-column:1/-1; }.run-facts { grid-column:1/-1; margin-top:15px; }.run-facts span { font-size:7px; }.run-facts b { display:inline; font-size:16px; margin-right:5px; }.sensei-note { display:none; }.strip-item { width:64px; }.help { display:none; }
+}
+@media(max-width:360px) { .page { padding-inline:12px; }.hero-copy h1 { font-size:51px; }.mission-card { padding:13px; }.mission-card h3 { font-size:19px; }.toolbar .btn { padding:9px 7px; }.tile-label { font-size:7px; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+/* Keep mission accents readable when a player chooses the daylight palette. */
+:root[data-theme="light"] .mission-card { --mission:#456a20; }
+:root[data-theme="light"] .mission-orange { --mission:#9c452a; }
+:root[data-theme="light"] .mission-purple { --mission:#6c479d; }
+:root[data-theme="light"] .mission-blue { --mission:#316a86; }
+:root[data-theme="light"] .mission-gold { --mission:#806019; }
+@media(prefers-color-scheme:light) {
+  :root:not([data-theme]) .mission-card { --mission:#456a20; }
+  :root:not([data-theme]) .mission-orange { --mission:#9c452a; }
+  :root:not([data-theme]) .mission-purple { --mission:#6c479d; }
+  :root:not([data-theme]) .mission-blue { --mission:#316a86; }
+  :root:not([data-theme]) .mission-gold { --mission:#806019; }
+}

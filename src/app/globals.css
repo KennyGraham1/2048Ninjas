@@ -88,7 +88,7 @@ html {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-nunito), ui-rounded, system-ui, -apple-system, sans-serif;
+  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
   -webkit-tap-highlight-color: transparent;
   transition: background 200ms ease, color 200ms ease;
   /* No double-tap-to-zoom delay on buttons and tiles. */

@@ -1,6 +1,6 @@
 import type { Mode } from "./game";
 
-export type Theme = "auto" | "light" | "dark" | "tatami";
+export type Theme = "dojo" | "auto" | "light" | "dark" | "tatami";
 /** Modes the UI can show; "race" is a two-player layout rather than a single game. */
 export type AppMode = Mode | "race" | "weekly";
 
@@ -28,7 +28,7 @@ export interface Settings {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
-  theme: "auto",
+  theme: "dojo",
   sound: true,
   haptics: true,
   undoLimit: 3,
@@ -46,6 +46,7 @@ export const DEFAULT_SETTINGS: Settings = {
 export const RACE_TARGETS = [256, 512, 1024, 2048] as const;
 
 export const THEMES: { id: Theme; name: string; blurb: string }[] = [
+  { id: "dojo", name: "Shadow Dojo", blurb: "Midnight ink, electric lime, and quiet focus" },
   { id: "auto", name: "System", blurb: "Follows your device's light / dark setting" },
   { id: "light", name: "Mountain Dojo", blurb: "Cool slate and crimson banners" },
   { id: "dark", name: "Midnight Dojo", blurb: "Moonlit shadows and violet accents" },
@@ -55,9 +56,9 @@ export const THEMES: { id: Theme; name: string; blurb: string }[] = [
 export const MODES: { id: AppMode; name: string; blurb: string }[] = [
   { id: "classic", name: "Classic", blurb: "Play at your own pace" },
   { id: "daily", name: "Daily", blurb: "Same board for everyone today" },
-  { id: "timed", name: "Timed", blurb: "60 seconds on the clock" },
-  { id: "race", name: "Race", blurb: "Two players, same board, first to the target wins" },
-  { id: "puzzle", name: "Puzzle", blurb: "Preset boards with a goal and a move limit" },
+  { id: "timed", name: "Blitz", blurb: "60 seconds on the clock" },
+  { id: "race", name: "Duel", blurb: "Two players, same board, first to the target wins" },
+  { id: "puzzle", name: "The scrolls", blurb: "Preset boards with a goal and a move limit" },
   { id: "weekly", name: "Weekly", blurb: "A new rule set every week" },
 ];
 

@@ -28,17 +28,17 @@ export default function NinjaIcon({ style, className }: { style: NinjaStyle; cla
             </g>
           )}
           <path d="M34 65Q22 66 21 81L32 84 38 75M66 65Q78 66 79 81L68 84 62 75" fill={suit} />
-          <path d="M33 63h34l3 25H55l-5-8-5 8H30Z" fill={suit} />
+          <path d="M33 63h34l8 25H57l-7-10-7 10H25Z" fill={suit} />
           <path d="m37 63 24 19M63 63 39 82" fill="none" stroke={accent} strokeWidth="4" opacity="0.65" />
           <path d="M30 78h40v7H30Z" fill={accent} />
           <path d="m56 82 8 12 6-4-10-10" fill={accent} />
           <path d="m74 31 18-5-6 14 7 8-20-4Z" fill={accent} />
-          <rect x="22" y="12" width="56" height="59" rx="25" fill={suit} />
-          <path d="M31 27q5-8 13-9" fill="none" stroke="#ffffff" strokeWidth="3" opacity="0.18" strokeLinecap="round" />
-          <path d="M26 34h48v17Q50 60 26 51Z" fill="#f4d7b6" />
+          <path d="m22 29 15-17h26l15 17-3 28-25 15-25-15Z" fill={suit} stroke="#142422" strokeWidth="2" />
+          <path d="m31 24 8-7h12" fill="none" stroke="#ffffff" strokeWidth="3" opacity="0.18" strokeLinecap="round" />
+          <path d="M26 34h48l-3 17-21 7-21-7Z" fill="#f4d7b6" />
           <path d="M26 51q24 7 48 0v6Q50 68 26 57Z" fill="#172337" opacity="0.32" />
-          <path d="m34 41 9 3m14 0 9-3" stroke="#172337" strokeWidth="3.5" strokeLinecap="round" />
-          <path d="M22 28q28-5 56 0v9q-28-5-56 0Z" fill={accent} />
+          <path d="m33 41 11 4m12 0 11-4" stroke="#172337" strokeWidth="3.5" strokeLinecap="round" />
+          <path d="M22 28h56v9H22Z" fill={accent} />
           {rank < 3 ? (
             <g fill={suit}>{Array.from({ length: rank + 1 }, (_, i) => <circle key={i} cx={50 + (i - rank / 2) * 6} cy="31" r="1.8" />)}</g>
           ) : rank < 10 ? (

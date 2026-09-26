@@ -11,7 +11,7 @@ import { PUZZLES } from "@/lib/puzzles";
 import { todayKey } from "@/lib/rng";
 import type { Settings } from "@/lib/settings";
 import { NINJA_LIST, ninjaFor } from "@/lib/ninjas";
-import Logo from "./Logo";
+import DojoScene from "./DojoScene";
 import NinjaIcon from "./NinjaIcon";
 
 interface Props {
@@ -94,180 +94,58 @@ export default function Dashboard({
     };
   }, [online, playerName, dailyBest, today]);
 
+  const modes = [
+    { name: "Daily trial", tag: "A FRESH BOARD EVERY DAY", description: dailyBest !== undefined ? `Your best: ${dailyBest.toLocaleString()}${dailyRank ? ` · World #${dailyRank}` : ""}` : "The same battlefield for every ninja. A fresh challenge at midnight.", value: 512, action: onDaily, label: "Take the trial", tone: "green" },
+    { name: "Blitz", tag: "60 SECONDS", description: timedBest ? `Your best: ${timedBest.toLocaleString()} on ${size}×${size}. Beat the clock.` : "Trust your instincts. Build your clan before the clock runs out.", value: 16384, action: () => onTimed(size), label: "Beat the clock", tone: "orange" },
+    { name: "Duel", tag: "LOCAL · TWO PLAYERS", description: `One battlefield. Two rivals. First to ${ninjaFor(settings.raceTarget).name} wins.`, value: 1024, action: onRace, label: "Challenge a friend", tone: "purple" },
+    { name: "The scrolls", tag: `${solved}/${PUZZLES.length} PUZZLES SOLVED`, description: "Small boards. Limited moves. Every decision matters.", value: 128, action: onPuzzles, label: "Open the scrolls", tone: "blue" },
+    { name: "Weekly mission", tag: weekly.name.toUpperCase(), description: `${weekly.description}${weeklyBest ? ` Best: ${weeklyBest.toLocaleString()}.` : " A new twist every week."}`, value: 4096, action: onWeekly, label: "Accept mission", tone: "purple" },
+    { name: "Sensei training", tag: "LEARN THE WAY", description: "Get a second pair of eyes on every move. Learn to think three steps ahead.", value: 2048, action: () => onClassic(size, true), label: "Train with Sensei", tone: "gold" },
+  ];
+
   return (
-    <div className="dash">
-      <section className="hero">
-        {top ? (
-          <div className="hero-art" style={{ background: top.bg }}>
-            <NinjaIcon style={top} />
+    <div className="dash dojo-home">
+      <section className="dojo-hero">
+        <div className="hero-copy">
+          <span className="eyebrow"><i /> THE ART OF THE MERGE</span>
+          <h1>Small moves.<br /> <em>Legendary</em><br /> ninjas.</h1>
+          <p>Unite your clan. Master the shadows.<br />Your path to 2048 starts with a single swipe.</p>
+          <div className="hero-launch">
+            <button className="btn btn-primary launch-button" onClick={() => onClassic(size, false)}>
+              {saved[size] !== undefined ? "Continue your run" : "Enter the dojo"} <span aria-hidden="true">↗</span>
+            </button>
+            <SizePicker value={size} onChange={setSize} />
           </div>
-        ) : (
-          <Logo className="hero-art hero-logo" />
-        )}
-        <div className="hero-text">
-          <h1>{top ? `Best ninja: ${top.name}` : "Welcome to the dojo"}</h1>
-          <p>
-            {progress.stats.gamesPlayed
-              ? `${progress.stats.gamesPlayed} games · best ${progress.stats.bestScore.toLocaleString()} pts`
-              : "Merge matching ninjas to make the next one. Reach the Sensei."}
-          </p>
+          <span className="hero-footnote">CLASSIC MODE <b>·</b> {classicBest ? `PERSONAL BEST ${classicBest.toLocaleString()}` : "NO TIMER. FIND YOUR FLOW."}</span>
         </div>
+        <DojoScene />
+        <span className="hero-seal" aria-hidden="true">忍<span>SHINOBI</span></span>
       </section>
 
-      <LevelBar xp={progress.xp ?? 0} />
-      <MissionsCard progress={progress} />
-
-      {savedSizes.length > 0 && (
-        <section className="continue">
-          {savedSizes.map((n) => (
-            <button key={n} className="continue-card" onClick={() => onClassic(n, settings.coach)}>
-              <span className="continue-label">Continue</span>
-              <strong>
-                Classic {n}×{n}
-              </strong>
-              <span>{(saved[n] ?? 0).toLocaleString()} pts so far</span>
-              <span className="continue-arrow" aria-hidden="true">
-                →
-              </span>
-            </button>
-          ))}
-        </section>
-      )}
-
-      <h2 className="section-title">Play</h2>
-      <div className="game-list">
-        <article className="game-row">
-          <NinjaIcon style={ninjaFor(2048)} className="game-row-icon" />
-          <div className="game-row-text">
-            <h3>Classic</h3>
-            <p>{classicBest ? `Best ${classicBest.toLocaleString()} on ${size}×${size}` : "The original. Any pace, any size."}</p>
-          </div>
-          <div className="game-row-actions">
-            <SizePicker value={size} onChange={setSize} />
-            <button className="btn btn-primary" onClick={() => onClassic(size, false)}>
-              Play
-            </button>
-          </div>
-        </article>
-
-        <article className="game-row">
-          <NinjaIcon style={ninjaFor(16)} className="game-row-icon" />
-          <div className="game-row-text">
-            <h3>Coach</h3>
-            <p>The AI reviews every move and tells you how to score higher.</p>
-          </div>
-          <div className="game-row-actions">
-            <button className="btn" onClick={() => onOpen("coach")}>
-              Guide
-            </button>
-            <button className="btn btn-primary" onClick={() => onClassic(size, true)}>
-              Play
-            </button>
-          </div>
-        </article>
-
-        <article className="game-row">
-          <NinjaIcon style={ninjaFor(512)} className="game-row-icon" />
-          <div className="game-row-text">
-            <h3>Daily</h3>
-            <p>
-              {dailyBest !== undefined ? `Today's best: ${dailyBest.toLocaleString()}.` : "One board for everyone today."}
-              {dailyRank ? ` You're #${dailyRank} worldwide today.` : ""}
-              {streak > 1 ? ` 🔥 ${streak}-day streak` : ""}
-              {progress.streakFreezes ? ` · ${progress.streakFreezes} freeze${progress.streakFreezes > 1 ? "s" : ""} banked` : ""}
-            </p>
-          </div>
-          <div className="game-row-actions">
-            <button className="btn btn-primary" onClick={onDaily}>
-              {dailyBest !== undefined ? "Again" : "Play"}
-            </button>
-          </div>
-        </article>
-
-        <article className="game-row game-row-weekly">
-          <NinjaIcon style={ninjaFor(4096)} className="game-row-icon" />
-          <div className="game-row-text">
-            <h3>Weekly · {weekly.name}</h3>
-            <p>
-              {weekly.description} {weeklyBest ? `Best this week: ${weeklyBest.toLocaleString()}.` : "New rules every Monday."}
-            </p>
-          </div>
-          <div className="game-row-actions">
-            <button className="btn btn-primary" onClick={onWeekly}>
-              Play
-            </button>
-          </div>
-        </article>
-
-        <article className="game-row">
-          <NinjaIcon style={ninjaFor(8192)} className="game-row-icon" />
-          <div className="game-row-text">
-            <h3>Timed</h3>
-            <p>{timedBest ? `Best ${timedBest.toLocaleString()} on ${size}×${size}` : "Sixty seconds on the clock."}</p>
-          </div>
-          <div className="game-row-actions">
-            <SizePicker value={size} onChange={setSize} />
-            <button className="btn btn-primary" onClick={() => onTimed(size)}>
-              Play
-            </button>
-          </div>
-        </article>
-
-        <article className="game-row">
-          <NinjaIcon style={ninjaFor(1024)} className="game-row-icon" />
-          <div className="game-row-text">
-            <h3>Race</h3>
-            <p>
-              Two players, same board, first to {ninjaFor(settings.raceTarget).name}.
-              {progress.stats.racesPlayed ? ` ${progress.stats.racesWon}/${progress.stats.racesPlayed} won.` : ""}
-            </p>
-          </div>
-          <div className="game-row-actions">
-            <button className="btn btn-primary" onClick={onRace}>
-              Play
-            </button>
-          </div>
-        </article>
-
-        <article className="game-row">
-          <NinjaIcon style={ninjaFor(128)} className="game-row-icon" />
-          <div className="game-row-text">
-            <h3>Puzzles</h3>
-            <p>
-              Goal ninja, move limit, three stars. {solved}/{PUZZLES.length} solved.
-            </p>
-          </div>
-          <div className="game-row-actions">
-            <button className="btn btn-primary" onClick={onPuzzles}>
-              Browse
-            </button>
-          </div>
-        </article>
+      <div className="dojo-facts">
+        <span><b>01</b> Swipe to move</span><span><b>02</b> Merge matching ninjas</span><span><b>03</b> Reach the Sensei</span>
       </div>
-
-      <h2 className="section-title">Your dojo</h2>
-      <div className="tiles">
-        <button className="tile-link" onClick={() => onOpen("collection")}>
-          <strong>
-            {collected}/{NINJA_LIST.length}
-          </strong>
-          <span>Collection</span>
-        </button>
-        <button className="tile-link" onClick={() => onOpen("achievements")}>
-          <strong>
-            {achieved}/{ACHIEVEMENTS.length}
-          </strong>
-          <span>Achievements</span>
-        </button>
-        <button className="tile-link" onClick={() => onOpen("leaderboard")}>
-          <strong>{progress.leaderboard[0]?.score.toLocaleString() ?? "—"}</strong>
-          <span>Leaderboard</span>
-        </button>
-        <button className="tile-link" onClick={() => onOpen("stats")}>
-          <strong>{progress.stats.gamesPlayed}</strong>
-          <span>Games · Stats</span>
-        </button>
+      <div className="dojo-section-heading"><div><span className="eyebrow">CHOOSE YOUR PATH</span><h2>A different kind of challenge.</h2></div><span className="streak-counter">{streak ? `${streak} DAY STREAK` : "YOUR NEXT ADVENTURE"} ↗</span></div>
+      <div className="mission-grid">
+        {modes.map((mode, i) => (
+          <button className={`mission-card mission-${mode.tone}`} key={mode.name} onClick={mode.action}>
+            <span className="mission-number">0{i + 1}</span>
+            <NinjaIcon style={ninjaFor(mode.value)} className="mission-art" />
+            <span className="eyebrow">{mode.tag}</span><h3>{mode.name}</h3><p>{mode.description}</p>
+            <span className="mission-action">{mode.label}<span aria-hidden="true">↗</span></span>
+          </button>
+        ))}
       </div>
+      <div className="dojo-section-heading"><div><span className="eyebrow">YOUR LEGEND</span><h2>{top ? `${top.name}. And counting.` : "Every master was a rookie."}</h2></div><button className="link" onClick={() => onOpen("coach")}>Read the field guide ↗</button></div>
+      <div className="dojo-progress"><LevelBar xp={progress.xp ?? 0} /><MissionsCard progress={progress} /></div>
+      {savedSizes.filter((n) => n !== size).length > 0 && <div className="other-runs"><span className="eyebrow">OTHER SAVED RUNS</span>{savedSizes.filter((n) => n !== size).map((n) => <button className="btn" key={n} onClick={() => onClassic(n, settings.coach)}>Resume {n}×{n} · {(saved[n] ?? 0).toLocaleString()} pts ↗</button>)}</div>}
+      <div className="dojo-vault">
+        <button onClick={() => onOpen("collection")}><span>THE CLAN</span><strong>{collected}<small> / {NINJA_LIST.length}</small></strong><span>Ninjas discovered ↗</span></button>
+        <button onClick={() => onOpen("achievements")}><span>HONORS</span><strong>{achieved}<small> / {ACHIEVEMENTS.length}</small></strong><span>Achievements ↗</span></button>
+        <button onClick={() => onOpen("leaderboard")}><span>HALL OF FAME</span><strong>{progress.leaderboard[0]?.score.toLocaleString() ?? "—"}</strong><span>Leaderboard ↗</span></button>
+        <button onClick={() => onOpen("stats")}><span>YOUR JOURNEY</span><strong>{progress.stats.gamesPlayed}</strong><span>Games played ↗</span></button>
+      </div>
+      <footer className="dojo-footer"><span>2048 NINJAS</span><span>Patience is power. Keep training.</span><span>忍</span></footer>
     </div>
   );
 }

@@ -1,13 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Nunito } from "next/font/google";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
-
-const nunito = Nunito({
-  variable: "--font-nunito",
-  subsets: ["latin"],
-  weight: ["400", "700", "800"],
-});
+import "./dojo.css";
 
 export const metadata: Metadata = {
   title: "2048 Ninjas",
@@ -29,12 +23,12 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#c43d51",
+  themeColor: "#0b1212",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${nunito.variable} h-full antialiased`}>
+    <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
         {children}
         <ServiceWorkerRegister />

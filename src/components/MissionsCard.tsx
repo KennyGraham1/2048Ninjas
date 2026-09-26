@@ -10,7 +10,7 @@ export default function MissionsCard({ progress }: { progress: Progress }) {
   return (
     <section className="missions" aria-label="Today's missions">
       <header className="missions-head">
-        <strong>Today&apos;s specials</strong>
+        <strong>Daily missions</strong>
         <span className="muted small">
           {count}/{missions.length} done · resets at midnight
         </span>

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Tile as TileModel } from "@/lib/game";
 import { SMOKE_STYLE, ninjaFor } from "@/lib/ninjas";
 import NinjaIcon from "./NinjaIcon";
@@ -34,7 +35,7 @@ export default function Tile({ tile, size }: Props) {
     >
       <div
         className="tile-inner"
-        style={{ background: style.bg, color: style.fg }}
+        style={{ background: style.bg, color: style.fg, "--tile-ink": style.suit, "--tile-accent": style.accent } as CSSProperties}
         title={style.name}
       >
         <NinjaIcon style={style} className="tile-art" />
