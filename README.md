@@ -15,7 +15,11 @@ Open http://localhost:2048.
 
 ## Visual design
 
-Ninja Festival brings a pastel floating-island entrance, glossy character tiles, chunky controls, and a winding adventure map through three colorful worlds. Earn stars across nine missions, unlock scenery, and celebrate with combo bursts and animated medals. Phones show a compact next-recruit recipe above the board. The original Shadow Dojo and other themes remain available in Settings; saved runs, progress, sound controls, and reduced-motion preferences carry over.
+Ninja Festival brings a pastel floating-island entrance, glossy character tiles, chunky controls, and a winding adventure map through eight colorful worlds. Earn stars across 24 missions, unlock scenery, and celebrate with combo bursts and animated medals. Phones show a compact next-recruit recipe above the board. The original Shadow Dojo and other themes remain available in Settings; saved runs, progress, sound controls, and reduced-motion preferences carry over.
+
+## Journey challenges
+
+The original nine missions lead into 15 tougher trials: compact 3×3 puzzles, squad objectives, Moonlit Keep’s blocked-upward rule, expanded 5×5 boards, long combo chains, and guardian finales with two simultaneous objectives. Each world awards a backdrop; nine stars earn its mastery crown. Original save IDs and rewards remain compatible. Verified solution paths in the test fixtures ensure every perfect medal is achievable.
 
 ## Sound design
 

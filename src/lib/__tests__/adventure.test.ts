@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { ADVENTURE, adventureGame, adventureStatus, adventureStars, missionUnlocked, recordAdventure, sceneryUnlocked } from "../adventure";
+import { ADVENTURE, CHAPTERS, adventureMove, adventureGame, adventureStatus, adventureStars, missionUnlocked, recordAdventure, sceneryUnlocked } from "../adventure";
 import { applyUndo, canUndo, move, settle, type Direction, type GameState } from "../game";
+import solutions from "./adventure-solutions.json";
 import { EMPTY_PROGRESS } from "../progress";
 
 const dirs: Direction[] = ["left","up","right","down"];
 /** Search only to each mission's advertised par, verifying its perfect medal is attainable. */
 function solve(index: number): {game:GameState; path:Direction[]} | null {
   const m=ADVENTURE[index];
+  const path=(solutions as Record<string,Direction[]>)[m.id];
+  if(path){let game=adventureGame(m);for(const dir of path)game=settle(adventureMove(m,game,dir));return adventureStatus(m,game)==="won"?{game,path}:null;}
   let frontier=[{game:adventureGame(m),path:[] as Direction[]}];
   for(let depth=0;depth<m.par;depth++) {
     const next=[];
@@ -47,7 +50,8 @@ describe("adventure",()=>{
     expect(missionUnlocked(p,ADVENTURE[3].id)).toBe(true);
     expect(p.stats).toEqual(EMPTY_PROGRESS.stats);
     for(let i=3;i<ADVENTURE.length;i++)p=recordAdventure(p,ADVENTURE[i].id,solve(i)!.game);
-    expect(p.xp).toBe(1080);
+    expect(p.xp).toBe(ADVENTURE.length*120);
+    for(const c of CHAPTERS)expect(sceneryUnlocked(p,c.scenery)).toBe(true);
     expect(sceneryUnlocked(p,"storm")).toBe(true);
     expect(sceneryUnlocked(p,"ember")).toBe(true);
   });
@@ -75,5 +79,58 @@ describe("adventure undo", () => {
     expect(undone.moves).toBe(start.moves);
     expect(undone.undosLeft).toBe(moved.undosLeft-1);
     expect(undone.undosUsed).toBe(1);
+  });
+});
+
+
+describe("extended journey rules",()=>{
+  it("keeps the original saves valid and opens Frost after Ember",()=>{
+    let p={...EMPTY_PROGRESS};
+    for(let i=0;i<9;i++)p=recordAdventure(p,ADVENTURE[i].id,solve(i)!.game);
+    expect(p.xp).toBe(1080);
+    expect(missionUnlocked(p,"frost-1")).toBe(true);
+    expect(missionUnlocked(p,"frost-2")).toBe(false);
+    expect(sceneryUnlocked(p,"ember")).toBe(true);
+    expect(sceneryUnlocked(p,"frost")).toBe(false);
+  });
+  it("constructs compact and expanded boards with unique tile IDs",()=>{
+    for(const m of ADVENTURE){
+      const g=adventureGame(m);
+      expect(m.grid).toHaveLength(g.size*g.size);
+      expect(g.tiles.every(t=>t.row<g.size&&t.col<g.size)).toBe(true);
+      expect(g.nextId).toBeGreaterThan(Math.max(...g.tiles.map(t=>t.id)));
+      expect(m.limit).toBeGreaterThanOrEqual(m.par);
+    }
+  });
+  it("blocked wind moves cost neither turns nor random spawns",()=>{
+    const m=ADVENTURE.find(m=>m.id==="moon-1")!;
+    const game=adventureGame(m);
+    expect(adventureMove(m,game,"up")).toBe(game);
+    const next=adventureMove(m,game,"left");
+    expect(next.moves).toBe(1);
+    expect(next.rng).not.toBe(game.rng);
+  });
+  it("requires both guardian objectives at the same time",()=>{
+    const i=ADVENTURE.findIndex(m=>m.id==="eclipse-3"),m=ADVENTURE[i],g=solve(i)!.game;
+    expect(adventureStatus(m,g)).toBe("won");
+    expect(adventureStatus(m,{...g,score:0})).not.toBe("won");
+    expect(adventureStatus(m,{...g,tiles:[]})).not.toBe("won");
+    expect(adventureStars(m,{...g,undosUsed:1})).toBe(2);
+  });
+  it("ends a wind trial when its only remaining move is blocked",()=>{
+    const m={...ADVENTURE.find(m=>m.id==="moon-1")!,grid:[0,0,0,0, 2,4,2,4, 4,2,4,2, 2,4,2,4]};
+    const g=adventureGame(m);
+    expect(move(g,"up")).not.toBe(g);
+    expect(adventureStatus(m,g)).toBe("lost");
+    expect(adventureMove(m,g,"up")).toBe(g);
+  });
+  it("lets replay medals improve without farming XP or discarding best moves",()=>{
+    const m=ADVENTURE[0],g=solve(0)!.game;
+    const bronze=recordAdventure(EMPTY_PROGRESS,m.id,{...g,moves:m.limit});
+    expect(bronze.xp).toBe(40);
+    const gold=recordAdventure(bronze,m.id,g);
+    expect(gold.xp).toBe(120);
+    expect(recordAdventure(gold,m.id,g)).toBe(gold);
+    expect(recordAdventure(gold,m.id,{...g,moves:m.limit})).toBe(gold);
   });
 });

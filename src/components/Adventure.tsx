@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ADVENTURE, CHAPTERS, adventureGame, adventureStars, adventureStatus, missionUnlocked, objectiveLabel, objectiveTarget, objectiveValue, type AdventureMission } from "@/lib/adventure";
-import { KEY_MAP, applyUndo, canUndo, highestTile, move, settle, type Direction, type GameState } from "@/lib/game";
+import { ADVENTURE, CHAPTERS, adventureGame, adventureMove, adventureStars, adventureStatus, missionUnlocked, objectiveLabel, objectiveTarget, objectiveValue, type AdventureMission } from "@/lib/adventure";
+import { KEY_MAP, applyUndo, canUndo, highestTile, settle, type Direction, type GameState } from "@/lib/game";
 import type { Progress } from "@/lib/progress";
 import type { Settings } from "@/lib/settings";
 import { loadJson, saveJson } from "@/lib/storage";
@@ -21,7 +21,7 @@ function restoreSession(progress: Progress): Session | null {
   const saved = loadJson<Session | null>(KEY,null);
   if (!saved || !ADVENTURE.some((m) => m.id === saved.id) || !missionUnlocked(progress,saved.id)) return null;
   const g = saved.game;
-  if (!g || g.challengeId !== saved.id || g.size !== 4 || !Array.isArray(g.tiles) || !Number.isFinite(g.moves)) return null;
+  if (!g || g.challengeId !== saved.id || g.size !== (ADVENTURE.find((m)=>m.id===saved.id)?.size??4) || !Array.isArray(g.tiles) || !Number.isFinite(g.moves)) return null;
   return {id:saved.id,game:settle(g),history:[]};
 }
 
@@ -61,7 +61,8 @@ export default function Adventure({progress,settings,paused,onComplete}: Props) 
     if(!cur || paused || map || confirmRestart)return;
     const m=ADVENTURE.find((m)=>m.id===cur.id)!;
     if(adventureStatus(m,cur.game)!=="playing")return;
-    const game=move(cur.game,dir);
+    if(m.blockedDirection===dir){setAnnounce("The northern gale blocks upward moves. Try left, right, or down.");return;}
+    const game=adventureMove(m,cur.game,dir);
     if(game===cur.game)return;
     const next={id:cur.id,game,history:[...cur.history.slice(-19),settle(cur.game)]};
     save(next);
@@ -99,16 +100,17 @@ export default function Adventure({progress,settings,paused,onComplete}: Props) 
     <div className="sr-only" role="status" aria-live="polite">{announce}</div>
     <div className="arena-heading"><div><span className="eyebrow">{chapter.name.toUpperCase()} · MISSION {ADVENTURE.indexOf(mission)+1}</span><h1>{mission.name}</h1></div><button className="btn" onClick={()=>{setMap(true);setConfirmRestart(false)}}>Journey map</button></div>
     <div className="arena-layout"><div className="arena-main">
-      <div className="adventure-objective"><div><span className="eyebrow">MISSION OBJECTIVE</span><strong>{objectiveLabel(mission)}</strong></div><span className="objective-count">{Math.min(objectiveValue(mission,game),objectiveTarget(mission))}<small> / {objectiveTarget(mission)}</small></span><progress max={objectiveTarget(mission)} value={objectiveValue(mission,game)}/></div>
+      <div className="adventure-rules-bar"><span>{mission.boss?"♛ GUARDIAN TRIAL":`${game.size}×${game.size} TACTICAL BOARD`}</span><span>{mission.blockedDirection?"↑ UP IS BLOCKED · ← ↓ → AVAILABLE":`★★★ ${mission.par} moves · no undo`}</span></div>
+      <div className="adventure-goals">{[mission.objective,...(mission.secondary?[mission.secondary]:[])].map((objective,i)=><div className="adventure-objective" key={i}><div><span className="eyebrow">{mission.secondary?`OBJECTIVE ${i+1} OF 2 · COMPLETE BOTH`:"MISSION OBJECTIVE"}</span><strong>{objectiveLabel(mission,objective)}</strong></div><span className="objective-count">{Math.min(objectiveValue(mission,game,objective),objectiveTarget(mission,objective))}<small> / {objectiveTarget(mission,objective)}</small></span><progress aria-label={objectiveLabel(mission,objective)} max={objectiveTarget(mission,objective)} value={objectiveValue(mission,game,objective)}/></div>)}</div>
       <div className="adventure-counters"><span><b>{mission.limit-game.moves}</b> MOVES LEFT</span><span><b>{game.score}</b> SCORE</span><span><b>{game.combo??0}×</b> COMBO</span></div>
       <div className="board-wrap" onPointerDown={(e)=>{if(status!=="playing"||paused||confirmRestart||(e.target as HTMLElement).closest("button,a,input,select,textarea,summary"))return;if(e.pointerType==="mouse"&&e.button!==0)return;pointer.current={x:e.clientX,y:e.clientY};e.currentTarget.setPointerCapture(e.pointerId)}} onPointerCancel={()=>{pointer.current=null}} onPointerUp={(e)=>{const from=pointer.current;pointer.current=null;if(!from)return;const x=e.clientX-from.x,y=e.clientY-from.y;if(Math.max(Math.abs(x),Math.abs(y))<24)return;act(Math.abs(x)>Math.abs(y)?x>0?"right":"left":y>0?"down":"up")}}>
-        <Board size={4} tiles={game.tiles}/>
+        <Board size={game.size} tiles={game.tiles}/>
         {status==="playing"&&<ComboBurst combo={game.combo??0} move={game.moves}/>}
         {status!=="playing"&&<div className="overlay" role="status">{status==="won"&&<Confetti/>}<div className="overlay-card"><span className="eyebrow">{status==="won"?"MISSION COMPLETE":"A LESSON, NOT A DEFEAT"}</span><h2>{status==="won"?reward?`${chapter.reward} unlocked`:"Ninja-tastic!":"Refocus. Try again."}</h2>{status==="won"?<><p className="adventure-stars" aria-label={`${stars} of 3 stars`}>{[1,2,3].map((n)=><i key={n} className={n<=stars?"earned":""}>★</i>)}</p><p>{game.moves} moves · par {mission.par}. {reward?"Your new backdrop is ready in Settings.":"Your stars and progress are saved."}</p></>:<p>{mission.tip}</p>}<div className="overlay-buttons">{status==="won"&&nextMission&&<button className="btn btn-primary" onClick={()=>start(nextMission)}>Next mission ↗</button>}{status==="won"&&!nextMission&&<button className="btn btn-primary" onClick={()=>setMap(true)}>Journey complete · view map</button>}<button className="btn" onClick={()=>start(mission,true)}>Retry mission</button>{status==="lost"&&session.history.length>0&&canUndo(game)&&<button className="btn" onClick={undo}>Undo last move</button>}</div></div></div>}
       </div>
-      <div className="toolbar"><button className="btn" onClick={undo} disabled={!session.history.length||!canUndo(game)||status==="won"}>Undo · {game.undosLeft} left</button><button className="btn" onClick={()=>game.moves>0&&status==="playing"?setConfirmRestart(true):start(mission,true)}>Restart mission</button></div>
+      <div className="toolbar"><details className="mission-hint mobile-mission-hint"><summary>Strategy hint</summary><p>{mission.tip}</p></details><button className="btn" onClick={undo} disabled={!session.history.length||!canUndo(game)||status==="won"}>Undo · {game.undosLeft} left</button><button className="btn" onClick={()=>game.moves>0&&status==="playing"?setConfirmRestart(true):start(mission,true)}>Restart mission</button></div>
       {confirmRestart&&<div className="restart-question" role="alert"><span>Restart this attempt? Your earned stars stay saved.</span><button className="btn" onClick={()=>setConfirmRestart(false)}>Keep playing</button><button className="btn btn-primary" onClick={()=>start(mission,true)}>Restart</button></div>}
       <div className="arena-instructions"><span>Swipe / arrow keys / WASD</span><span>U to undo · Esc for map</span></div>
-    </div><aside className="arena-sidebar"><section className="mission-brief"><span className="eyebrow">FIELD NOTES</span><span className="brief-symbol" aria-hidden="true">{chapter.symbol}</span><h2>{mission.story}</h2><p>{mission.tip}</p><span className="brief-par">Perfect plan: {mission.par} moves, no undo.</span></section><NextRankGoal state={game}/><div className="adventure-reward-note"><span className="eyebrow">YOUR NEXT SANCTUARY</span><strong>{chapter.reward}</strong><span>Complete all three missions in {chapter.name} to unlock this backdrop for regular play.</span></div></aside></div>
+    </div><aside className="arena-sidebar"><section className="mission-brief"><span className="eyebrow">FIELD NOTES</span><span className="brief-symbol" aria-hidden="true">{chapter.symbol}</span><h2>{mission.story}</h2><details className="mission-hint"><summary>Need a strategy hint?</summary><p>{mission.tip}</p></details><span className="brief-par">Perfect plan: {mission.par} moves, no undo.</span></section><NextRankGoal state={game}/><div className="adventure-reward-note"><span className="eyebrow">YOUR NEXT SANCTUARY</span><strong>{chapter.reward}</strong><span>Complete all missions in {chapter.name} to unlock this backdrop for regular play.</span></div></aside></div>
   </div>;
 }

@@ -188,3 +188,38 @@
   .combo-burst { display:none; }
   .level-orb { transition:none; }
 }
+/* The extended journey keeps one world in focus and gives each trial a clear brief. */
+.world-selector { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; margin-bottom:25px; }
+.world-tab { display:grid; grid-template-columns:30px 1fr; gap:4px 9px; align-items:center; padding:13px; border:1px solid var(--line); border-radius:16px; text-align:left; background:var(--card); color:var(--muted); cursor:pointer; transition:transform 150ms; }
+.world-tab:hover { transform:translateY(-2px); border-color:var(--accent); }.world-tab>span { grid-row:1/3; font-size:25px; text-align:center; }.world-tab strong { font-size:11px; }.world-tab small { font-size:8px; letter-spacing:.6px; }.world-tab-active { background:var(--panel); color:var(--accent); border-color:var(--accent); box-shadow:0 3px 0 var(--line); }
+.journey-chapter-layout { display:grid; grid-template-columns:minmax(0,420px) minmax(0,1fr); gap:45px; align-items:start; }
+.journey-dossier { display:flex; flex-direction:column; gap:25px; padding-top:20px; }
+.chapter-challenge h2 { font-size:34px; line-height:1.15; letter-spacing:-1px; margin:15px 0; font-weight:800; }.chapter-challenge>p { font-size:13px; line-height:1.9; color:var(--muted); max-width:420px; }.chapter-challenge>.btn { margin-top:20px; }.chapter-return { display:block; margin-top:20px; background:none; border:0; cursor:pointer; }
+.chapter-medal { display:flex; align-items:center; gap:17px; padding:20px; margin-top:23px; border:1px solid var(--line); border-radius:20px; background:var(--card); }.chapter-medal>span { color:#c89b36; font-size:42px; }.chapter-medal>div { flex:1; display:flex; flex-direction:column; gap:7px; }.chapter-medal strong { font-size:14px; }.chapter-medal div>span { font-size:11px; color:var(--muted); }.chapter-medal progress { width:100%; height:6px; accent-color:var(--accent); border:0; border-radius:8px; overflow:hidden; }.chapter-medal progress::-webkit-progress-bar { background:var(--panel); }.chapter-medal progress::-webkit-progress-value { background:linear-gradient(90deg,#b495df,#e68bb5); }
+.chapter-objectives { display:flex; flex-direction:column; gap:20px; padding:0; margin:0; list-style:none; }.chapter-objectives li { display:flex; gap:15px; padding-bottom:20px; border-bottom:1px solid var(--line); }.chapter-objectives li>span { width:31px; height:31px; flex-shrink:0; border-radius:50%; display:grid; place-items:center; color:var(--accent); background:var(--panel); font-size:13px; font-weight:800; }.chapter-objectives strong { font-size:16px; }.chapter-objectives p { font-size:12px; line-height:1.7; margin:7px 0; color:var(--muted); }.chapter-objectives small { font-size:8px; color:var(--accent); letter-spacing:.6px; }.journey-dossier .journey-legend { text-align:left; padding:0; margin:0; }
+.world-pagination { display:flex; justify-content:space-between; align-items:center; margin-top:26px; gap:10px; }.world-pagination>span { font-size:11px; color:var(--muted); }
+.world-frost { --world-sky:#e6f6ff; --world-floor:#bbddf1; --world-ink:#366d89; --world-orb:#7dc2e2; --world-deep:#4f95b9; }
+.world-lotus { --world-sky:#fbe6f1; --world-floor:#ecc2dc; --world-ink:#95517c; --world-orb:#e395c1; --world-deep:#b96d9c; }
+.world-moon { --world-sky:#e6e8ff; --world-floor:#cbc7ee; --world-ink:#665888; --world-orb:#a69adb; --world-deep:#7e6cb5; }
+.world-sky { --world-sky:#e0f7f6; --world-floor:#b5dedb; --world-ink:#387e85; --world-orb:#72c5c1; --world-deep:#459c9d; }
+.world-eclipse { --world-sky:#f3e2f4; --world-floor:#d6b6df; --world-ink:#7c4c83; --world-orb:#c48acd; --world-deep:#9a60a4; }
+.stop-guardian .level-orb { border-radius:24px; border-color:#fff0bd; }.stop-guardian>strong { color:var(--world-ink); }
+.scenery-frost,[data-scenery="frost"] { --landscape:url('/scenery/frost.svg'); --land-accent:#78bddf; }
+.scenery-lotus,[data-scenery="lotus"] { --landscape:url('/scenery/lotus.svg'); --land-accent:#e08dbb; }
+.scenery-moon,[data-scenery="moon"] { --landscape:url('/scenery/moon.svg'); --land-accent:#aaa0e4; }
+.scenery-sky,[data-scenery="sky"] { --landscape:url('/scenery/sky.svg'); --land-accent:#76c8cf; }
+.scenery-eclipse,[data-scenery="eclipse"] { --landscape:url('/scenery/eclipse.svg'); --land-accent:#d695df; }
+:root[data-theme="festival"] .scenery-frost { --land-accent:#377ba1; }:root[data-theme="festival"] .scenery-lotus { --land-accent:#aa4c84; }:root[data-theme="festival"] .scenery-moon { --land-accent:#7760ab; }:root[data-theme="festival"] .scenery-sky { --land-accent:#327f8a; }:root[data-theme="festival"] .scenery-eclipse { --land-accent:#964fa2; }
+.adventure-rules-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:9px; font-weight:800; color:var(--land-accent); letter-spacing:.5px; line-height:1.7; }.adventure-rules-bar>span:last-child { text-align:right; font-weight:500; }
+.adventure-goals { display:grid; gap:10px; }.adventure-goals:has(>:nth-child(2)) { grid-template-columns:1fr 1fr; }.adventure-goals:has(>:nth-child(2)) .adventure-objective { padding:14px; gap:8px; }.adventure-goals:has(>:nth-child(2)) .adventure-objective strong { font-size:14px; line-height:1.5; }.adventure-goals:has(>:nth-child(2)) .eyebrow { font-size:6px; letter-spacing:.7px; }.adventure-goals:has(>:nth-child(2)) .objective-count { font-size:19px; }
+.mission-hint { font-size:12px; line-height:1.8; color:var(--muted); }.mission-hint summary { cursor:pointer; color:var(--accent); font-weight:700; min-height:32px; }.mobile-mission-hint { display:none; }.mission-hint p { margin:7px 0; }
+@media(max-width:850px) {
+  .journey-chapter-layout { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:25px; }.world-tab { padding:11px 9px; grid-template-columns:24px 1fr; gap:3px 6px; }.world-tab strong { font-size:9px; }.world-tab>span { font-size:21px; }.world-tab small { font-size:6px; }.chapter-challenge h2 { font-size:28px; }.chapter-medal { padding:13px; gap:10px; }.chapter-medal strong { font-size:12px; }
+}
+@media(max-width:640px) {
+  .world-selector { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:20px; }.world-tab { padding:11px 10px; }.world-tab strong { font-size:10px; }.world-tab small { font-size:7px; }
+  .journey-chapter-layout { grid-template-columns:1fr; gap:25px; }.journey-dossier { padding:0; gap:20px; }.chapter-challenge h2 { font-size:29px; }.chapter-challenge>p { font-size:12px; }.chapter-objectives strong { font-size:14px; }.chapter-objectives p { font-size:11px; }.chapter-objectives small { font-size:7px; }
+  .world-pagination .btn { padding:10px; font-size:10px; }.world-pagination>span { font-size:9px; }
+  .adventure-rules-bar { font-size:7px; gap:9px; letter-spacing:0; }.adventure-goals:has(>:nth-child(2)) { grid-template-columns:1fr; gap:8px; }.adventure-goals:has(>:nth-child(2)) .adventure-objective { padding:10px 13px; gap:6px; }.adventure-goals:has(>:nth-child(2)) .adventure-objective strong { font-size:12px; }
+  .mobile-mission-hint { display:block; flex:1 0 100%; order:2; border:1px solid var(--line); border-radius:12px; background:var(--card); padding:10px 13px; font-size:11px; }.mobile-mission-hint summary { min-height:24px; }.adventure-run .toolbar { flex-wrap:wrap; }.mission-brief>.mission-hint { display:none; }
+}

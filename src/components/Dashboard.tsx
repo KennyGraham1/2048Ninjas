@@ -126,8 +126,8 @@ export default function Dashboard({
       </section>
 
       <button className="adventure-invite" onClick={onAdventure}>
-        <span className="adventure-invite-art" aria-hidden="true">{CHAPTERS.map((c) => <i key={c.name}>{c.symbol}</i>)}</span>
-        <span className="adventure-invite-copy"><span className="eyebrow">STORY MISSIONS · NEW BACKDROPS TO EARN</span><strong>The path of the shinobi</strong><span>Nine missions. Three lands. A home for your clan.</span></span>
+        <span className="adventure-invite-art" aria-hidden="true">{CHAPTERS.slice(0,3).map((c) => <i key={c.name}>{c.symbol}</i>)}</span>
+        <span className="adventure-invite-copy"><span className="eyebrow">STORY MISSIONS · NEW BACKDROPS TO EARN</span><strong>The path of the shinobi</strong><span>{ADVENTURE.length} missions. {CHAPTERS.length} worlds. New twists. Bigger challenges.</span></span>
         <span className="adventure-invite-action">{ADVENTURE.filter((m) => progress.adventure?.[m.id]).length}/{ADVENTURE.length} complete <b>Begin your journey ↗</b></span>
       </button>
       <div className="dojo-facts">
