@@ -178,6 +178,8 @@ export default function Race({ target, wasabi, onFinish }: Props) {
 
   const swipeHandlers = (who: Player) => ({
     onPointerDown: (e: React.PointerEvent) => {
+      if ((e.target as HTMLElement).closest("button,a,input,select,textarea,summary")) return;
+      if (e.pointerType === "mouse" && e.button !== 0) return;
       pointer.current[who] = { x: e.clientX, y: e.clientY };
       try {
         (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);

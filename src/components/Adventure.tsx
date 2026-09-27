@@ -44,6 +44,7 @@ export default function Adventure({progress,settings,paused,onComplete}: Props) 
     if (!missionUnlocked(progress,m.id)) return;
     const current=ref.current;
     const next = !fresh && current?.id === m.id && adventureStatus(m,current.game) === "playing" ? current : {id:m.id,game:adventureGame(m),history:[]};
+    sounds.select();
     save(next);setMap(false);setConfirmRestart(false);setAnnounce(`${m.name}. ${objectiveLabel(m)} in ${m.limit} moves.`);
   };
   const undo = useCallback(() => {
@@ -52,6 +53,7 @@ export default function Adventure({progress,settings,paused,onComplete}: Props) 
     const m=ADVENTURE.find((m)=>m.id===cur.id)!;
     if(adventureStatus(m,cur.game)==="won")return;
     save({...cur,game:applyUndo(cur.history[cur.history.length-1],cur.game),history:cur.history.slice(0,-1)});
+    sounds.undo();
     setAnnounce("Move undone. Plan your next strike.");
   },[paused,map,confirmRestart,save]);
   const act = useCallback((dir: Direction) => {
@@ -65,7 +67,7 @@ export default function Adventure({progress,settings,paused,onComplete}: Props) 
     save(next);
     const result=adventureStatus(m,game);
     if(game.lastGain){sounds.merge(highestTile(game),game.combo);if(settings.haptics)vibrate(12)}else sounds.slide();
-    if(result==="won"){onComplete(m.id,game);sounds.win();if(settings.haptics)vibrate([20,40,50]);}
+    if(result==="won"){onComplete(m.id,game);sounds.missionComplete(ADVENTURE.filter((item)=>item.chapter===m.chapter).at(-1)?.id===m.id);if(settings.haptics)vibrate([20,40,50]);}
     if(result==="lost")sounds.over();
     setAnnounce(`${objectiveLabel(m)}: ${objectiveValue(m,game)} of ${objectiveTarget(m)}. ${m.limit-game.moves} moves left.${result==="won"?" Mission complete.":result==="lost"?" Try again or undo your last move.":""}`);
     if(timer.current)clearTimeout(timer.current);
@@ -113,7 +115,7 @@ export default function Adventure({progress,settings,paused,onComplete}: Props) 
     <div className="arena-layout"><div className="arena-main">
       <div className="adventure-objective"><div><span className="eyebrow">MISSION OBJECTIVE</span><strong>{objectiveLabel(mission)}</strong></div><span className="objective-count">{Math.min(objectiveValue(mission,game),objectiveTarget(mission))}<small> / {objectiveTarget(mission)}</small></span><progress max={objectiveTarget(mission)} value={objectiveValue(mission,game)}/></div>
       <div className="adventure-counters"><span><b>{mission.limit-game.moves}</b> MOVES LEFT</span><span><b>{game.score}</b> SCORE</span><span><b>{game.combo??0}×</b> COMBO</span></div>
-      <div className="board-wrap" onPointerDown={(e)=>{if(e.pointerType==="mouse"&&e.button!==0)return;pointer.current={x:e.clientX,y:e.clientY};e.currentTarget.setPointerCapture(e.pointerId)}} onPointerCancel={()=>{pointer.current=null}} onPointerUp={(e)=>{const from=pointer.current;pointer.current=null;if(!from)return;const x=e.clientX-from.x,y=e.clientY-from.y;if(Math.max(Math.abs(x),Math.abs(y))<24)return;act(Math.abs(x)>Math.abs(y)?x>0?"right":"left":y>0?"down":"up")}}>
+      <div className="board-wrap" onPointerDown={(e)=>{if(status!=="playing"||paused||confirmRestart||(e.target as HTMLElement).closest("button,a,input,select,textarea,summary"))return;if(e.pointerType==="mouse"&&e.button!==0)return;pointer.current={x:e.clientX,y:e.clientY};e.currentTarget.setPointerCapture(e.pointerId)}} onPointerCancel={()=>{pointer.current=null}} onPointerUp={(e)=>{const from=pointer.current;pointer.current=null;if(!from)return;const x=e.clientX-from.x,y=e.clientY-from.y;if(Math.max(Math.abs(x),Math.abs(y))<24)return;act(Math.abs(x)>Math.abs(y)?x>0?"right":"left":y>0?"down":"up")}}>
         <Board size={4} tiles={game.tiles}/>
         {status!=="playing"&&<div className="overlay" role="status">{status==="won"&&<Confetti/>}<div className="overlay-card"><span className="eyebrow">{status==="won"?"MISSION COMPLETE":"A LESSON, NOT A DEFEAT"}</span><h2>{status==="won"?reward?`${chapter.reward} unlocked`:"A step closer to legend.":"Refocus. Try again."}</h2>{status==="won"?<><p className="adventure-stars" aria-label={`${stars} of 3 stars`}>{[1,2,3].map((n)=><i key={n} className={n<=stars?"earned":""}>★</i>)}</p><p>{game.moves} moves · par {mission.par}. {reward?"Your new backdrop is ready in Settings.":"Your stars and progress are saved."}</p></>:<p>{mission.tip}</p>}<div className="overlay-buttons">{status==="won"&&nextMission&&<button className="btn btn-primary" onClick={()=>start(nextMission)}>Next mission ↗</button>}{status==="won"&&!nextMission&&<button className="btn btn-primary" onClick={()=>setMap(true)}>Journey complete · view map</button>}<button className="btn" onClick={()=>start(mission,true)}>Retry mission</button>{status==="lost"&&session.history.length>0&&canUndo(game)&&<button className="btn" onClick={undo}>Undo last move</button>}</div></div></div>}
       </div>

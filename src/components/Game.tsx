@@ -64,7 +64,7 @@ import {
   type Achievement,
   type Progress,
 } from "@/lib/progress";
-import { setSoundEnabled, sounds, unlock as unlockAudio, vibrate } from "@/lib/sound";
+import { setSoundEnabled, setSoundVolume, sounds, unlock as unlockAudio, vibrate } from "@/lib/sound";
 import Board from "./Board";
 import Confetti from "./Confetti";
 import Modal from "./Modal";
@@ -300,6 +300,7 @@ export default function Game() {
     if (!sceneryUnlocked(p,s.scenery)) s.scenery = "rooftops";
     applyTheme(s.theme);
     setSoundEnabled(s.sound);
+    setSoundVolume(s.soundVolume);
     const g = loadGame(s) ?? createGame(s);
     settingsRef.current = s;
     progressRef.current = p;
@@ -333,6 +334,7 @@ export default function Game() {
     saveJson("settings", settings);
     applyTheme(settings.theme);
     setSoundEnabled(settings.sound);
+    setSoundVolume(settings.soundVolume);
   }, [settings, ready]);
 
   useEffect(() => {
@@ -518,6 +520,7 @@ export default function Game() {
       // Feedback.
       if (next.lastGain > 0) {
         sounds.merge(biggest, next.combo ?? 1);
+        if (next.wasabiMerges > prev.wasabiMerges) sounds.smoke();
         if (settingsRef.current.haptics) vibrate(10);
         const id = nowMs + Math.random();
         setPopups((p) => [...p.slice(-3), { id, gain: next.lastGain }]);
@@ -610,6 +613,7 @@ export default function Game() {
     historyRef.current = hist.slice(0, -1);
     setHistory(historyRef.current);
     commit(applyUndo(prev, cur));
+    sounds.undo();
     setAnnounce("Undid last move.");
   }, [commit]);
 
@@ -868,6 +872,8 @@ export default function Game() {
   }, [addToast, changeSettings, commit, submitName]);
 
   const onPointerDown = (e: React.PointerEvent) => {
+    if ((e.target as HTMLElement).closest("button,a,input,select,textarea,summary")) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
     pointerStart.current = { x: e.clientX, y: e.clientY };
     try {
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);

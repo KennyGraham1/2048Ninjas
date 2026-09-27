@@ -17,6 +17,10 @@ Open http://localhost:2048.
 
 The Shadow Dojo redesign brings a moonlit rooftop entrance, six mission cards, dark framed tiles, blade-flash merges, and a live rank panel. The arena adapts to phone, tablet, and desktop screens. Sound and reduced-motion preferences remain supported; saved runs and progress carry over.
 
+## Sound design
+
+The dojo uses procedural Web Audio: filtered wind for movement, wooden strikes and pentatonic plucks for merges, rising combo notes, smoke bursts, undo sweeps, and layered bells for rank and chapter unlocks. Settings includes a saved volume slider, immediate mute, and a sound preview. Audio starts only after a player gesture.
+
 ## Features
 
 - **Dashboard** hub: pick Classic (any size), Coach, Daily, Timed, Race or Puzzles, with your progress on each card.

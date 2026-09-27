@@ -1,3 +1,4 @@
+import { sounds, unlock as unlockAudio } from "@/lib/sound";
 import { SCENERIES, sceneryUnlocked } from "@/lib/adventure";
 import { SKINS } from "@/lib/engagement";
 import type { Progress } from "@/lib/progress";
@@ -104,10 +105,15 @@ export default function SettingsPanel({ settings, progress, onChange, onResetPro
         <legend>Feel</legend>
         <Toggle
           label="Sound effects"
-          hint="Slides, merges and unlock chimes"
+          hint="Wind swishes, wooden strikes, and rank-up chimes"
           checked={settings.sound}
           onChange={(v) => onChange({ sound: v })}
         />
+        <label className="setting-row sound-volume">
+          <span className="setting-text"><strong>Effects volume</strong><span>{Math.round(settings.soundVolume * 100)}%</span></span>
+          <input aria-label="Effects volume" type="range" min="0" max="100" step="5" value={Math.round(settings.soundVolume * 100)} disabled={!settings.sound} onChange={(e)=>onChange({soundVolume:Number(e.target.value)/100})} />
+        </label>
+        <button type="button" className="btn sound-preview" disabled={!settings.sound || settings.soundVolume===0} onClick={async()=>{await unlockAudio();sounds.preview();}}>♪ Preview sounds</button>
         <Toggle
           label="Haptics"
           hint="A small buzz on merges (phones only)"

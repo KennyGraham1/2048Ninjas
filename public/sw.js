@@ -1,6 +1,6 @@
 /* Minimal offline support: cache the app shell on install, serve cached assets first,
    and fall back to the cached page when the network is unavailable. */
-const CACHE = "ninjas-2048-v4";
+const CACHE = "ninjas-2048-v5";
 const SHELL = ["/", "/manifest.webmanifest", "/icons/icon.svg"];
 
 self.addEventListener("install", (event) => {

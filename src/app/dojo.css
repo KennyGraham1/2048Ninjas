@@ -198,3 +198,9 @@ button,input { font-family: inherit; }
   .adventure-run .arena-heading { align-items:flex-start; gap:10px; }.adventure-run .arena-heading h1 { font-size:26px; }.adventure-run .arena-heading>.btn { padding:9px; font-size:9px; flex-shrink:0; }.adventure-objective { padding:14px; gap:12px; }.adventure-objective .eyebrow { font-size:7px; }.adventure-objective strong { font-size:15px; }.objective-count { font-size:20px; }.objective-count small { font-size:10px; }.adventure-counters { font-size:7px; }.adventure-counters b { font-size:16px; }.mission-brief { padding:20px; }.brief-symbol { float:right; font-size:35px; margin:0 0 5px 10px; }.mission-brief h2 { font-size:21px; margin-top:12px; }.adventure-run .overlay-card h2 { font-size:21px; }.adventure-run .overlay-card p { font-size:11px; }.adventure-run .overlay-card .adventure-stars { font-size:24px; }.adventure-run .overlay-card { padding:10px 16px; }.adventure-run .overlay-buttons .btn { font-size:10px; padding:9px 11px; }.adventure-reward-note { font-size:11px; }
 }
 @media(prefers-reduced-motion:reduce) { .merge-smoke,.tile-merged .tile-inner::after { display:none; }.tile-removed { visibility:hidden; }.tile-merged .tile-inner,.tile-merged .tile-art { animation:none; opacity:1; transform:none; } }
+.sound-volume input[type="range"] { width:min(180px,45%); accent-color:var(--accent); cursor:pointer; }
+.sound-preview { margin:4px 0 15px; }
+@media(max-width:640px) {
+  .game[data-scenery="bamboo"]::before,.adventure-run.scenery-bamboo::before { background-position:left center; }
+  .game[data-scenery="storm"]::before,.adventure-run.scenery-storm::before,.game[data-scenery="ember"]::before,.adventure-run.scenery-ember::before { background-position:right center; }
+}

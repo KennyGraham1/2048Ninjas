@@ -8,6 +8,7 @@ export interface Settings {
   scenery: import("./adventure").Scenery;
   theme: Theme;
   sound: boolean;
+  soundVolume: number;
   haptics: boolean;
   /** 3 or -1 (unlimited). */
   undoLimit: number;
@@ -32,6 +33,7 @@ export const DEFAULT_SETTINGS: Settings = {
   scenery: "rooftops",
   theme: "dojo",
   sound: true,
+  soundVolume: 0.65,
   haptics: true,
   undoLimit: 3,
   wasabi: true,
