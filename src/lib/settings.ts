@@ -1,6 +1,6 @@
 import type { Mode } from "./game";
 
-export type Theme = "dojo" | "auto" | "light" | "dark" | "tatami";
+export type Theme = "festival" | "dojo" | "auto" | "light" | "dark" | "tatami";
 /** Modes the UI can show; "race" is a two-player layout rather than a single game. */
 export type AppMode = Mode | "race" | "weekly";
 
@@ -31,7 +31,7 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   scenery: "rooftops",
-  theme: "dojo",
+  theme: "festival",
   sound: true,
   soundVolume: 0.65,
   haptics: true,
@@ -50,6 +50,7 @@ export const DEFAULT_SETTINGS: Settings = {
 export const RACE_TARGETS = [256, 512, 1024, 2048] as const;
 
 export const THEMES: { id: Theme; name: string; blurb: string }[] = [
+  { id: "festival", name: "Ninja Festival", blurb: "Glossy gems, pink skies, and a little ninja magic" },
   { id: "dojo", name: "Shadow Dojo", blurb: "Midnight ink, electric lime, and quiet focus" },
   { id: "auto", name: "System", blurb: "Follows your device's light / dark setting" },
   { id: "light", name: "Mountain Dojo", blurb: "Cool slate and crimson banners" },

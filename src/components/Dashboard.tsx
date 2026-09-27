@@ -12,7 +12,7 @@ import { PUZZLES } from "@/lib/puzzles";
 import { todayKey } from "@/lib/rng";
 import type { Settings } from "@/lib/settings";
 import { NINJA_LIST, ninjaFor } from "@/lib/ninjas";
-import DojoScene from "./DojoScene";
+import FestivalScene from "./FestivalScene";
 import NinjaIcon from "./NinjaIcon";
 
 interface Props {
@@ -110,9 +110,9 @@ export default function Dashboard({
     <div className="dash dojo-home">
       <section className="dojo-hero">
         <div className="hero-copy">
-          <span className="eyebrow"><i /> THE ART OF THE MERGE</span>
-          <h1>Small moves.<br /> <em>Legendary</em><br /> ninjas.</h1>
-          <p>Unite your clan. Master the shadows.<br />Your path to 2048 starts with a single swipe.</p>
+          <span className="eyebrow"><i /> A LITTLE MERGE. A LOT OF MAGIC.</span>
+          <h1>Little ninjas.<br /><em>Big adventures.</em></h1>
+          <p>A world of colorful characters, clever moves,<br />and one-more-go moments. Your clan is waiting!</p>
           <div className="hero-launch">
             <button className="btn btn-primary launch-button" onClick={() => onClassic(size, false)}>
               {saved[size] !== undefined ? "Continue your run" : "Enter the dojo"} <span aria-hidden="true">↗</span>
@@ -121,8 +121,8 @@ export default function Dashboard({
           </div>
           <span className="hero-footnote">CLASSIC MODE <b>·</b> {classicBest ? `PERSONAL BEST ${classicBest.toLocaleString()}` : "NO TIMER. FIND YOUR FLOW."}</span>
         </div>
-        <DojoScene />
-        <span className="hero-seal" aria-hidden="true">忍<span>SHINOBI</span></span>
+        <FestivalScene />
+        <span className="festival-sticker"><b>17</b> NINJAS TO<br />DISCOVER <i>★</i></span>
       </section>
 
       <button className="adventure-invite" onClick={onAdventure}>
@@ -133,7 +133,7 @@ export default function Dashboard({
       <div className="dojo-facts">
         <span><b>01</b> Swipe to move</span><span><b>02</b> Merge matching ninjas</span><span><b>03</b> Reach the Sensei</span>
       </div>
-      <div className="dojo-section-heading"><div><span className="eyebrow">CHOOSE YOUR PATH</span><h2>A different kind of challenge.</h2></div><span className="streak-counter">{streak ? `${streak} DAY STREAK` : "YOUR NEXT ADVENTURE"} ↗</span></div>
+      <div className="dojo-section-heading"><div><span className="eyebrow">CHOOSE YOUR PATH</span><h2>Pick your next adventure.</h2></div><span className="streak-counter">{streak ? `${streak} DAY STREAK` : "YOUR NEXT ADVENTURE"} ↗</span></div>
       <div className="mission-grid">
         {modes.map((mode, i) => (
           <button className={`mission-card mission-${mode.tone}`} key={mode.name} onClick={mode.action}>

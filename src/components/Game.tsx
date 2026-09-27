@@ -40,6 +40,7 @@ import Race from "./Race";
 import Dashboard from "./Dashboard";
 import Adventure from "./Adventure";
 import NextRankGoal from "./NextRankGoal";
+import ComboBurst from "./ComboBurst";
 import { recordAdventure, sceneryUnlocked } from "@/lib/adventure";
 import InstallPrompt from "./InstallPrompt";
 import DishStrip from "./DishStrip";
@@ -292,10 +293,10 @@ export default function Game() {
         );
       }
     }
-    if (!loadJson("shadow-dojo-intro", false)) {
-      s.theme = "dojo";
+    if (!loadJson("festival-intro", false)) {
+      s.theme = "festival";
       saveJson("settings", s);
-      saveJson("shadow-dojo-intro", true);
+      saveJson("festival-intro", true);
     }
     if (!sceneryUnlocked(p,s.scenery)) s.scenery = "rooftops";
     applyTheme(s.theme);
@@ -1163,7 +1164,7 @@ export default function Game() {
 
       {appBar}
 
-      <div className="arena-heading"><div><span className="eyebrow">THE SHADOW DOJO</span><h1>Find your flow.</h1></div><span className="arena-live"><i /> {state.over ? "RUN COMPLETE" : "TRAINING IN PROGRESS"}</span></div>
+      <div className="arena-heading"><div><span className="eyebrow">YOUR DAILY DOSE OF NINJA MAGIC</span><h1>Let’s make a little magic.</h1></div><span className="arena-live"><i /> {state.over ? "RUN COMPLETE" : "TRAINING IN PROGRESS"}</span></div>
       <Toasts toasts={toasts} onDismiss={dismissToast} />
       <div className="arena-layout">
       <div className="arena-main">
@@ -1239,6 +1240,8 @@ export default function Game() {
         </div>
       </header>
 
+      <div className="mobile-next-goal"><NextRankGoal state={state} /></div>
+
       <div className="toolbar">
         <div className="toolbar-buttons">
           {!puzzle && (
@@ -1287,11 +1290,7 @@ export default function Game() {
         onPointerCancel={() => (pointerStart.current = null)}
       >
         <Board size={state.size} tiles={state.tiles} nudge={nudge} />
-        {(state.combo ?? 0) >= 3 && !showOver && (
-          <div className="combo-badge" key={state.combo} aria-hidden="true">
-            ×{state.combo} combo
-          </div>
-        )}
+        {!showOver && !showWin && <ComboBurst combo={state.combo ?? 0} move={state.moves} />}
         {hintActive && !showWin && !showOver && (
           <div className={`hint-badge hint-${hintActive.dir}`} aria-hidden="true">
             <span className="hint-arrow">{DIR_ARROW[hintActive.dir]}</span>

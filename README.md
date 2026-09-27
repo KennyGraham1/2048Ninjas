@@ -15,7 +15,7 @@ Open http://localhost:2048.
 
 ## Visual design
 
-The Shadow Dojo redesign brings a moonlit rooftop entrance, six mission cards, dark framed tiles, blade-flash merges, and a live rank panel. The arena adapts to phone, tablet, and desktop screens. Sound and reduced-motion preferences remain supported; saved runs and progress carry over.
+Ninja Festival brings a pastel floating-island entrance, glossy character tiles, chunky controls, and a winding adventure map through three colorful worlds. Earn stars across nine missions, unlock scenery, and celebrate with combo bursts and animated medals. Phones show a compact next-recruit recipe above the board. The original Shadow Dojo and other themes remain available in Settings; saved runs, progress, sound controls, and reduced-motion preferences carry over.
 
 ## Sound design
 
@@ -45,7 +45,7 @@ The dojo uses procedural Web Audio: filtered wind for movement, wooden strikes a
 - **Share:** PNG share card of your final board, and "beat my score" links for the daily challenge.
 - **Feel:** score pop-ups, synthesized sound effects, haptics on phones, confetti on the win, squash/nudge animations,
   "new ninja" and achievement toasts.
-- **Themes:** System, Mountain Dojo, Midnight Dojo, Bamboo Grove.
+- **Themes:** Ninja Festival, Shadow Dojo, System, Mountain Dojo, Midnight Dojo, Bamboo Grove.
 - **Share** your score via the native share sheet or clipboard.
 - **Accessible:** screen-reader move announcements, keyboard-only play, reduced-motion support.
 - **PWA:** installable with offline support (service worker registers in production builds).

@@ -9,7 +9,7 @@ export interface ShareCardOptions {
   state: GameState;
   title: string;
   subtitle: string;
-  /** Dish value -> SVG outerHTML, gathered from the rendered board. 0 = wasabi. */
+  /** Ninja value -> SVG outerHTML, gathered from the rendered board. 0 = wasabi. */
   art: Map<number, string>;
   url: string;
 }
@@ -43,11 +43,11 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
   const ctx = canvas.getContext("2d")!;
 
   // Background
-  ctx.fillStyle = "#0b1212";
+  ctx.fillStyle = "#f8f3fc";
   ctx.fillRect(0, 0, W, H);
 
   // Header
-  ctx.fillStyle = "#c5ed70";
+  ctx.fillStyle = "#e4ccfa";
   roundRect(ctx, 60, 60, 72, 72, 18);
   ctx.fill();
   ctx.fillStyle = "#253e3c";
@@ -67,14 +67,14 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
   ctx.lineTo(107, 98);
   ctx.stroke();
 
-  ctx.fillStyle = "#edf0e4";
+  ctx.fillStyle = "#49335f";
   ctx.font = "800 44px Avenir Next, system-ui, sans-serif";
   ctx.textBaseline = "middle";
   ctx.fillText("2048 Ninjas", 152, 96);
 
   ctx.font = "800 64px Avenir Next, system-ui, sans-serif";
   ctx.fillText(title, 60, 210);
-  ctx.fillStyle = "#91a49a";
+  ctx.fillStyle = "#786586";
   ctx.font = "600 30px Avenir Next, system-ui, sans-serif";
   ctx.fillText(subtitle, 60, 268);
 
@@ -84,7 +84,7 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
   const bx = 60;
   const by = 330;
   const gap = 18;
-  ctx.fillStyle = "#111d1b";
+  ctx.fillStyle = "#b394cd";
   roundRect(ctx, bx, by, boardSize, boardSize, 28);
   ctx.fill();
   const cell = (boardSize - gap * (n + 1)) / n;
@@ -107,18 +107,22 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
       const x = bx + gap + c * (cell + gap);
       const y = by + gap + r * (cell + gap);
       const t = tiles.get(`${r},${c}`);
-      ctx.fillStyle = "#172322";
+      ctx.fillStyle = "#a789c2";
       roundRect(ctx, x, y, cell, cell, 20);
       ctx.fill();
       if (!t) continue;
       const style = t.wasabi ? SMOKE_STYLE : ninjaFor(t.value);
-      ctx.fillStyle = "#192824";
+      const glaze = ctx.createLinearGradient(x, y, x + cell, y + cell);
+      glaze.addColorStop(0, "#f8efff");
+      glaze.addColorStop(0.6, style.gem);
+      glaze.addColorStop(1, style.gem);
+      ctx.fillStyle = glaze;
       roundRect(ctx, x, y, cell, cell, 20);
       ctx.fill();
       const img = images.get(t.wasabi ? 0 : t.value);
       const artSize = cell * 0.58;
       if (img) ctx.drawImage(img, x + (cell - artSize) / 2, y + cell * 0.08, artSize, artSize);
-      ctx.fillStyle = style.accent;
+      ctx.fillStyle = "#3b3352";
       ctx.font = `800 ${Math.max(16, Math.min(28, cell * 0.11))}px Avenir Next, system-ui, sans-serif`;
       ctx.textAlign = "center";
       ctx.fillText(style.name, x + cell / 2, y + cell * 0.82, cell - 12);
@@ -127,7 +131,7 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
   }
 
   // Footer
-  ctx.fillStyle = "#91a49a";
+  ctx.fillStyle = "#786586";
   ctx.font = "600 28px Avenir Next, system-ui, sans-serif";
   ctx.fillText(`Highest ninja: ${ninjaFor(highestTile(state)).name}  ·  ${url}`, 60, H - 40);
 
@@ -136,7 +140,7 @@ export async function renderShareCard({ state, title, subtitle, art, url }: Shar
   );
 }
 
-/** Collect SVG markup for each dish currently on the board. */
+/** Collect SVG markup for each ninja currently on the board. */
 export function collectBoardArt(boardEl: HTMLElement | null): Map<number, string> {
   const art = new Map<number, string>();
   if (!boardEl) return art;

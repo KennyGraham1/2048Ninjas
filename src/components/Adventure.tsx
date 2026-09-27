@@ -7,11 +7,11 @@ import type { Progress } from "@/lib/progress";
 import type { Settings } from "@/lib/settings";
 import { loadJson, saveJson } from "@/lib/storage";
 import { sounds, vibrate } from "@/lib/sound";
-import { ninjaFor } from "@/lib/ninjas";
 import Board from "./Board";
-import NinjaIcon from "./NinjaIcon";
 import NextRankGoal from "./NextRankGoal";
 import Confetti from "./Confetti";
+import JourneyMap from "./JourneyMap";
+import ComboBurst from "./ComboBurst";
 
 interface Session { id: string; game: GameState; history: GameState[] }
 interface Props { progress: Progress; settings: Settings; paused: boolean; onComplete: (id: string, game: GameState) => void }
@@ -87,22 +87,8 @@ export default function Adventure({progress,settings,paused,onComplete}: Props) 
   },[act,undo,map,paused]);
 
   if(map || !mission || !session) {
-    const completed=ADVENTURE.filter((m)=>progress.adventure?.[m.id]).length;
     const resume=session?ADVENTURE.find((m)=>m.id===session.id):undefined;
-    return <div className="adventure-map">
-      <header className="adventure-intro"><span className="eyebrow">A NINJA&apos;S JOURNEY · {completed} / {ADVENTURE.length} MISSIONS</span><h1>Three lands.<br/><em>One rising legend.</em></h1><p>Read the board. Complete the mission. Earn stars and claim a new home for your clan.</p><span className="adventure-rules">★ Finish · ★★ Within par + 2 · ★★★ At par, without undo · 40 XP per new star</span></header>
-      {session && resume && adventureStatus(resume,session.game)==="playing" && session.game.moves>0 && <button className="btn btn-primary adventure-resume" onClick={()=>{setMap(false);setConfirmRestart(false)}}>Resume {resume.name} · move {session.game.moves} ↗</button>}
-      {CHAPTERS.map((chapter,index)=>{
-        const missions=ADVENTURE.filter((m)=>m.chapter===index);
-        const unlocked=missions.every((m)=>progress.adventure?.[m.id]);
-        return <section key={chapter.name} className={`adventure-chapter scenery-${chapter.scenery}`}>
-          <header><span className="chapter-symbol" aria-hidden="true">{chapter.symbol}</span><div><span className="eyebrow">CHAPTER 0{index+1}</span><h2>{chapter.name}</h2><p>{chapter.description}</p></div><span className="chapter-reward">{unlocked?"✓ BACKDROP UNLOCKED":"CHAPTER REWARD"}<b>{chapter.reward}</b></span></header>
-          <div className="adventure-nodes">{missions.map((m)=>{const available=missionUnlocked(progress,m.id);const result=progress.adventure?.[m.id];return <button className={`adventure-node ${result?"node-complete":""}`} key={m.id} disabled={!available} onClick={()=>start(m)}>
-            <span className="node-number">{available?String(ADVENTURE.indexOf(m)+1).padStart(2,"0"):"LOCKED"}</span><NinjaIcon style={ninjaFor(m.objective.kind==="rank"||m.objective.kind==="squad"?m.objective.target:2**(index+5))}/><strong>{m.name}</strong><span>{objectiveLabel(m)}</span><small>{m.limit} moves · par {m.par}</small><span className="adventure-stars" aria-label={`${result?.stars??0} of 3 stars`}>{[1,2,3].map((n)=><i key={n} className={n<=(result?.stars??0)?"earned":""}>★</i>)}</span><span className="node-action">{!available?"Complete the previous mission":result?"Replay mission ↗":"Begin mission ↗"}</span>
-          </button>})}</div>
-        </section>;
-      })}
-    </div>;
+    return <JourneyMap progress={progress} onStart={start} resume={session&&resume&&adventureStatus(resume,session.game)==="playing"&&session.game.moves>0 ? {name:resume.name,moves:session.game.moves,onResume:()=>{setMap(false);setConfirmRestart(false)}} : undefined} />;
   }
   const chapter=CHAPTERS[mission.chapter];
   const nextMission=ADVENTURE[ADVENTURE.indexOf(mission)+1];
@@ -117,7 +103,8 @@ export default function Adventure({progress,settings,paused,onComplete}: Props) 
       <div className="adventure-counters"><span><b>{mission.limit-game.moves}</b> MOVES LEFT</span><span><b>{game.score}</b> SCORE</span><span><b>{game.combo??0}×</b> COMBO</span></div>
       <div className="board-wrap" onPointerDown={(e)=>{if(status!=="playing"||paused||confirmRestart||(e.target as HTMLElement).closest("button,a,input,select,textarea,summary"))return;if(e.pointerType==="mouse"&&e.button!==0)return;pointer.current={x:e.clientX,y:e.clientY};e.currentTarget.setPointerCapture(e.pointerId)}} onPointerCancel={()=>{pointer.current=null}} onPointerUp={(e)=>{const from=pointer.current;pointer.current=null;if(!from)return;const x=e.clientX-from.x,y=e.clientY-from.y;if(Math.max(Math.abs(x),Math.abs(y))<24)return;act(Math.abs(x)>Math.abs(y)?x>0?"right":"left":y>0?"down":"up")}}>
         <Board size={4} tiles={game.tiles}/>
-        {status!=="playing"&&<div className="overlay" role="status">{status==="won"&&<Confetti/>}<div className="overlay-card"><span className="eyebrow">{status==="won"?"MISSION COMPLETE":"A LESSON, NOT A DEFEAT"}</span><h2>{status==="won"?reward?`${chapter.reward} unlocked`:"A step closer to legend.":"Refocus. Try again."}</h2>{status==="won"?<><p className="adventure-stars" aria-label={`${stars} of 3 stars`}>{[1,2,3].map((n)=><i key={n} className={n<=stars?"earned":""}>★</i>)}</p><p>{game.moves} moves · par {mission.par}. {reward?"Your new backdrop is ready in Settings.":"Your stars and progress are saved."}</p></>:<p>{mission.tip}</p>}<div className="overlay-buttons">{status==="won"&&nextMission&&<button className="btn btn-primary" onClick={()=>start(nextMission)}>Next mission ↗</button>}{status==="won"&&!nextMission&&<button className="btn btn-primary" onClick={()=>setMap(true)}>Journey complete · view map</button>}<button className="btn" onClick={()=>start(mission,true)}>Retry mission</button>{status==="lost"&&session.history.length>0&&canUndo(game)&&<button className="btn" onClick={undo}>Undo last move</button>}</div></div></div>}
+        {status==="playing"&&<ComboBurst combo={game.combo??0} move={game.moves}/>}
+        {status!=="playing"&&<div className="overlay" role="status">{status==="won"&&<Confetti/>}<div className="overlay-card"><span className="eyebrow">{status==="won"?"MISSION COMPLETE":"A LESSON, NOT A DEFEAT"}</span><h2>{status==="won"?reward?`${chapter.reward} unlocked`:"Ninja-tastic!":"Refocus. Try again."}</h2>{status==="won"?<><p className="adventure-stars" aria-label={`${stars} of 3 stars`}>{[1,2,3].map((n)=><i key={n} className={n<=stars?"earned":""}>★</i>)}</p><p>{game.moves} moves · par {mission.par}. {reward?"Your new backdrop is ready in Settings.":"Your stars and progress are saved."}</p></>:<p>{mission.tip}</p>}<div className="overlay-buttons">{status==="won"&&nextMission&&<button className="btn btn-primary" onClick={()=>start(nextMission)}>Next mission ↗</button>}{status==="won"&&!nextMission&&<button className="btn btn-primary" onClick={()=>setMap(true)}>Journey complete · view map</button>}<button className="btn" onClick={()=>start(mission,true)}>Retry mission</button>{status==="lost"&&session.history.length>0&&canUndo(game)&&<button className="btn" onClick={undo}>Undo last move</button>}</div></div></div>}
       </div>
       <div className="toolbar"><button className="btn" onClick={undo} disabled={!session.history.length||!canUndo(game)||status==="won"}>Undo · {game.undosLeft} left</button><button className="btn" onClick={()=>game.moves>0&&status==="playing"?setConfirmRestart(true):start(mission,true)}>Restart mission</button></div>
       {confirmRestart&&<div className="restart-question" role="alert"><span>Restart this attempt? Your earned stars stay saved.</span><button className="btn" onClick={()=>setConfirmRestart(false)}>Keep playing</button><button className="btn btn-primary" onClick={()=>start(mission,true)}>Restart</button></div>}

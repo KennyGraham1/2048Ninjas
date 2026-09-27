@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 import "./dojo.css";
+import "./festival.css";
 
 export const metadata: Metadata = {
   title: "2048 Ninjas",
@@ -23,7 +24,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#0b1212",
+  themeColor: "#f5edff",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

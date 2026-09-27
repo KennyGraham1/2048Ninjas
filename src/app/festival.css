@@ -1,0 +1,190 @@
+/* Ninja Festival — bright, tactile puzzle pieces and a world worth exploring. */
+:root[data-theme="festival"][data-theme] {
+  --bg:#f8f3fc; --fg:#49335f; --muted:#786586; --panel:#eee4f7;
+  --panel-dark:#d4bfe6; --cell:#d8c4ea; --card:#fff; --line:#e4d5ef;
+  --accent:#ba3279; --accent-dark:#9e2363; --accent-fg:#fff;
+  --overlay:#fbf5fff2; --shadow:0 18px 50px #76539920; --radius:20px;
+  color-scheme:light;
+}
+:root[data-theme="festival"] body {
+  background-image:radial-gradient(ellipse at 90% 3%,#f8d9ec90,transparent 40%),radial-gradient(ellipse at 0% 35%,#ded9ff80,transparent 45%);
+  background-attachment:fixed;
+}
+:root[data-theme="festival"] .appbar { border-bottom-color:#dac8e670; }
+:root[data-theme="festival"] .wordmark { color:#624386; }
+:root[data-theme="festival"] .wordmark b { color:var(--accent); }
+:root[data-theme="festival"] .icon-btn { background:#ffffff90; border:1px solid #e6d7ef; width:40px; height:40px; }
+:root[data-theme="festival"] .btn { border-radius:14px; min-height:44px; box-shadow:0 3px 0 #d7c4e5; background:#fff; }
+:root[data-theme="festival"] .btn:active { transform:translateY(2px); box-shadow:none; }
+:root[data-theme="festival"] .btn-primary { background:linear-gradient(#ea69a7,#ce4189); border-color:#c23d80; color:#fff; box-shadow:inset 0 2px 0 #ffb4d3,0 4px 0 #a12b68,0 7px 14px #d14d8a25; text-shadow:0 1px 1px #a12b6840; }
+:root[data-theme="festival"] .btn-primary:hover { background:linear-gradient(#f080b6,#da5098); }
+:root[data-theme="festival"] .segmented { border-radius:12px; background:#fff9; }
+:root[data-theme="festival"] .segmented button { border-radius:8px; padding:10px; }
+:root[data-theme="festival"] .segmented .seg-active { background:#8661b9; }
+:root[data-theme="festival"] .dojo-hero { overflow:visible; min-height:440px; }
+:root[data-theme="festival"] .hero-copy h1 { font-size:clamp(44px,5.5vw,67px); font-weight:850; letter-spacing:-3.2px; line-height:1.08; }
+:root[data-theme="festival"] .hero-copy .eyebrow { color:#8761a6; letter-spacing:1.7px; }
+:root[data-theme="festival"] .hero-copy p { font-size:14px; }
+.festival-scene { width:112%; margin-left:-8%; overflow:visible; }
+.festival-lead { animation:island-hover 5s ease-in-out infinite; }
+.festival-stars { transform-origin:center; animation:star-shimmer 4s ease-in-out infinite; }
+.festival-sticker { position:absolute; right:5px; bottom:40px; z-index:2; width:112px; height:112px; padding:12px; border-radius:50%; display:flex; flex-direction:column; justify-content:center; text-align:center; background:#fff2b7; color:#855029; font-size:9px; font-weight:800; letter-spacing:1px; line-height:1.4; transform:rotate(12deg); border:3px solid #fff; box-shadow:0 5px 0 #e7c889,0 12px 20px #88619315; }
+.festival-sticker b { font-size:31px; line-height:1; letter-spacing:-1px; }
+.festival-sticker i { position:absolute; top:2px; right:2px; color:#e6a246; font-size:23px; font-style:normal; }
+:root[data-theme="festival"] .dojo-facts { border:1px solid #fff; border-radius:18px; padding:18px 24px; background:#ffffff85; box-shadow:0 4px 15px #9d80b207; }
+:root[data-theme="festival"] .dojo-facts b { color:#a1519b; }
+:root[data-theme="festival"] .adventure-invite { background:linear-gradient(110deg,#eee0ff,#fce3ee 80%,#ffe6cc); border:2px solid #fff; border-radius:24px; box-shadow:0 5px 0 #dfcaeb,0 10px 24px #9e74b30d; }
+:root[data-theme="festival"] .adventure-invite-art i { border:2px solid #fff; border-radius:12px; color:#41765f; background:#bcf0d6; box-shadow:0 4px 0 #8bc7b1; }
+:root[data-theme="festival"] .adventure-invite-art i:nth-child(2) { color:#6c539b; background:#ddc9ff; box-shadow:0 4px 0 #bca0e2; }
+:root[data-theme="festival"] .adventure-invite-art i:nth-child(3) { color:#9d5a3b; background:#ffd7ae; box-shadow:0 4px 0 #e4b289; }
+:root[data-theme="festival"] .mission-card { --mission:#9173c6; background:linear-gradient(140deg,color-mix(in srgb,var(--mission) 17%,white),white 80%); border:2px solid white; border-radius:23px; box-shadow:0 5px 0 color-mix(in srgb,var(--mission) 28%,#e9dcef); }
+:root[data-theme="festival"] .mission-orange { --mission:#d9955d; }
+:root[data-theme="festival"] .mission-purple { --mission:#a47bc5; }
+:root[data-theme="festival"] .mission-blue { --mission:#5baaa5; }
+:root[data-theme="festival"] .mission-gold { --mission:#c7a04c; }
+:root[data-theme="festival"] .mission-card .eyebrow { color:var(--muted); }
+:root[data-theme="festival"] .mission-art { filter:drop-shadow(0 7px 7px #68497725); width:85px; height:85px; }
+:root[data-theme="festival"] .mission-card p { min-height:61px; }
+:root[data-theme="festival"] :is(.level,.missions,.next-rank,.rank-card,.mission-brief,.adventure-objective) { border-radius:20px; box-shadow:0 4px 0 #e8dcf0; }
+:root[data-theme="festival"] .level-badge { border-radius:14px; background:linear-gradient(#af89dd,#8056b7); }
+:root[data-theme="festival"] .level-bar { height:7px; border-radius:10px; }
+:root[data-theme="festival"] .level-bar span { background:linear-gradient(90deg,#b088e3,#e88ebd); border-radius:10px; }
+:root[data-theme="festival"] .dojo-vault { background:#ffffff80; border:1px solid #fff; border-radius:20px; }
+:root[data-theme="festival"] .dojo-vault button:first-child { border-radius:20px 0 0 20px; }
+:root[data-theme="festival"] .dojo-vault button:last-child { border-radius:0 20px 20px 0; }
+:root[data-theme="festival"] .dojo-vault strong { color:#8c60b5; }
+:root[data-theme="festival"] .arena-heading h1 { color:#694689; }
+:root[data-theme="festival"] .mode-badge { color:#785398; border-radius:9px; background:#f3e9ff; }
+:root[data-theme="festival"] .score-box { border-radius:14px; background:#fff; box-shadow:0 3px 0 #e4d5ef; }
+:root[data-theme="festival"] .score-box:first-child { background:#fce5f1; border-color:#f0c5de; }
+:root[data-theme="festival"] .score-value { font-family:inherit; font-weight:850; letter-spacing:-1px; }
+:root[data-theme="festival"] .board-wrap { border:3px solid #fff; padding:9px; border-radius:25px; background:linear-gradient(145deg,#bb97df,#906bb6); box-shadow:inset 0 -4px 0 #795398,0 7px 0 #dac5eb,0 20px 45px #9574ab25; }
+:root[data-theme="festival"] .board { border-radius:15px; background:#b394cd; }
+:root[data-theme="festival"] .board-cell { background:#a789c2; border:0; border-radius:12px; box-shadow:inset 0 3px 4px #74508e35,0 1px 0 #e5cbf680; }
+:root[data-theme="festival"] .tile-inner { background:linear-gradient(155deg,color-mix(in srgb,var(--tile-gem) 45%,white),var(--tile-gem) 62%,color-mix(in srgb,var(--tile-gem) 80%,#856384)) !important; color:#3c3453 !important; border:1px solid color-mix(in srgb,var(--tile-gem) 35%,white); border-radius:12px; box-shadow:inset 0 3px 0 #ffffff85,inset 0 -4px 0 #63497325,0 3px 3px #65478030; padding-bottom:7%; overflow:hidden; }
+.tile-glint { display:none; }
+:root[data-theme="festival"] .tile-glint { display:block; position:absolute; left:7%; right:7%; top:4%; height:37%; border-radius:9px 9px 45% 45%; background:linear-gradient(#ffffff60,#fff0); pointer-events:none; }
+:root[data-theme="festival"] .tile-art { position:relative; filter:drop-shadow(0 3px 1px #5e427035); width:75%; height:67%; }
+:root[data-theme="festival"] .tile-label { color:#342c49; font-weight:800; text-shadow:0 1px 0 #ffffff40; }
+:root[data-theme="festival"] .tile-value { z-index:2; top:5px; left:6px; font-family:inherit; font-weight:850; font-size:clamp(10px,1.5vw,16px); line-height:1; color:#3b3352; }
+:root[data-theme="festival"] .tile-wasabi .tile-inner { border:2px dashed #fff; }
+:root[data-theme="festival"] .rank-portrait>svg { filter:drop-shadow(0 9px 7px #86649430); }
+:root[data-theme="festival"] .rank-orbit { background:radial-gradient(circle,#f4d7ee,#eadcf900 70%); border:2px dashed #dfc8ed; }
+:root[data-theme="festival"] .modal { border-radius:25px; box-shadow:0 20px 90px #54336c35; }
+:root[data-theme="festival"] .modal-backdrop { background:#68487770; }
+:root[data-theme="festival"] .overlay { border-radius:20px; backdrop-filter:blur(7px); }
+:root[data-theme="festival"] .overlay-card h2 { color:#a1357a; }
+:root[data-theme="festival"] .adventure-stars .earned { color:#dc9b22; text-shadow:0 2px 0 #ffe8a1; }
+:root[data-theme="festival"] :is(.adventure-run,.game)[data-scenery]::before,
+:root[data-theme="festival"] .adventure-run::before { opacity:.06; }
+:root[data-theme="festival"] .scenery-bamboo { --land-accent:#38836c; }
+:root[data-theme="festival"] .scenery-storm { --land-accent:#8860ac; }
+:root[data-theme="festival"] .scenery-ember { --land-accent:#ba623e; }
+.overlay-card .adventure-stars .earned { animation:reward-pop 550ms cubic-bezier(.2,.8,.2,1.3) both; }
+.overlay-card .adventure-stars .earned:nth-child(2) { animation-delay:150ms; }
+.overlay-card .adventure-stars .earned:nth-child(3) { animation-delay:300ms; }
+.combo-burst { position:absolute; z-index:12; top:10px; left:50%; display:flex; align-items:center; justify-content:center; gap:7px; width:max-content; max-width:95%; padding:9px 14px; border:2px solid #fff; border-radius:30px; color:#fff; background:linear-gradient(#ef83b3,#cd438c); box-shadow:0 4px 0 #a63d7550,0 8px 20px #71459430; pointer-events:none; animation:combo-celebrate 1500ms ease-out forwards; }
+.combo-burst strong { font-size:16px; letter-spacing:-.4px; text-shadow:0 2px 0 #9b387450; }
+.combo-burst b { font-size:9px; letter-spacing:.8px; }
+.combo-burst>span { color:#ffeb9d; }
+.combo-super { background:linear-gradient(#b08fe5,#8860bc); }
+.mobile-next-goal { display:none; }
+/* Each world is a playable trail, with the next available level clearly marked. */
+.journey-heading { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:25px 0 30px; }
+.journey-heading h1 { font-size:clamp(36px,4.5vw,54px); line-height:1.1; font-weight:850; letter-spacing:-2.5px; margin:15px 0; }
+.journey-heading h1 em { font-style:normal; color:var(--accent); }
+.journey-heading p { color:var(--muted); font-size:13px; line-height:1.7; }
+.journey-totals { background:var(--card); border:2px solid var(--line); border-radius:24px; padding:20px 24px; display:grid; grid-template-columns:auto 1fr; gap:5px 10px; box-shadow:0 5px 0 var(--panel); }
+.journey-totals>span:first-child { font-size:35px; color:#dca328; text-shadow:0 2px 0 #ffe5a4; }
+.journey-totals strong { font-size:33px; letter-spacing:-1px; }
+.journey-totals small { color:var(--muted); font-size:17px; }
+.journey-totals>span:last-child { grid-column:1/-1; font-size:10px; color:var(--muted); }
+.journey-worlds { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+.journey-world { --world-sky:#dff5e9; --world-floor:#bee6d2; --world-ink:#386e5c; --world-orb:#6dc6a1; --world-deep:#3e8e76; background:linear-gradient(var(--world-sky),var(--world-floor)); border:3px solid #fff; border-radius:28px; color:var(--world-ink); overflow:hidden; box-shadow:0 6px 0 #d6c6e2,0 12px 24px #69458410; }
+.world-storm { --world-sky:#eee3fc; --world-floor:#d7c4f1; --world-ink:#725598; --world-orb:#b192e0; --world-deep:#7b56ae; }
+.world-ember { --world-sky:#fff0dc; --world-floor:#f6d6ba; --world-ink:#935c46; --world-orb:#eeab76; --world-deep:#bd805b; }
+.world-heading { position:relative; z-index:2; padding:25px 22px 0; }
+.world-heading>span { font-size:9px; letter-spacing:2px; font-weight:800; }
+.world-heading h2 { font-size:25px; letter-spacing:-1px; font-weight:850; margin:6px 0; }
+.world-heading p { font-size:11px; line-height:1.7; margin:0; min-height:38px; }
+.journey-land { height:570px; position:relative; }
+.journey-trail { position:absolute; inset:0; width:100%; height:550px; overflow:visible; }
+.journey-trail path { fill:none; stroke-linecap:round; }
+.trail-shadow { stroke:var(--world-deep); stroke-width:34px; opacity:.17; transform:translateY(6px); }
+.trail-main { stroke:#ffffffe0; stroke-width:31px; }
+.trail-dashes { stroke:var(--world-floor); stroke-width:3px; stroke-dasharray:5 10; }
+.journey-stop { position:absolute; top:var(--stop-y); left:var(--stop-x); transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; width:160px; text-align:center; }
+.level-orb { position:relative; width:74px; height:74px; border-radius:50%; border:4px solid #fff; background:radial-gradient(ellipse at 35% 20%,#ffffff80,transparent 60%),var(--world-orb); color:#fff; font-family:inherit; font-weight:850; font-size:32px; text-shadow:0 2px 0 #65476b30; box-shadow:inset 0 -5px 0 #67507828,0 5px 0 var(--world-deep),0 8px 14px #65476b25; cursor:pointer; transition:transform 150ms; }
+.level-orb:hover:enabled { transform:translateY(-4px) rotate(-5deg); }
+.level-orb:active:enabled { transform:translateY(2px); }
+.level-orb:disabled { background:radial-gradient(ellipse at 35% 20%,#fff8,transparent 65%),#c5bdd0; box-shadow:inset 0 -4px 0 #aaa0b733,0 4px 0 #ada2b9; color:#f4effa; cursor:not-allowed; }
+.level-orb b { position:absolute; right:-6px; top:0; width:25px; height:25px; border:2px solid #fff; border-radius:50%; background:#5cba94; font-size:14px; display:grid; place-items:center; }
+.stop-current .level-orb { background:radial-gradient(ellipse at 35% 20%,#fff8,transparent 60%),#e469a4; box-shadow:inset 0 -5px 0 #b93a7430,0 5px 0 #b8477d,0 0 0 10px #fff5,0 0 0 18px #fff2; }
+.play-flag { position:absolute; top:-29px; font-size:8px; font-weight:850; letter-spacing:1px; background:#9f376d; color:white; padding:6px 10px; border-radius:8px; white-space:nowrap; box-shadow:0 3px 0 #ffffff60; }
+.play-flag::after { content:""; position:absolute; bottom:-5px; left:calc(50% - 5px); border-inline:5px solid transparent; border-top:5px solid #9f376d; }
+.map-stars { display:flex; gap:3px; font-size:20px; line-height:1; margin:11px 0 5px; }
+.map-stars i { font-style:normal; color:color-mix(in srgb,var(--world-deep) 28%,var(--world-floor)); text-shadow:0 1px 0 #fff9; }
+.map-stars .earned { color:#d29b22; text-shadow:0 1px 0 #fff6c2; }
+.journey-stop>strong { font-size:12px; font-weight:800; line-height:1.4; }
+.journey-stop>small { font-size:8px; margin-top:3px; line-height:1.5; }
+.map-cloud { position:absolute; width:85px; height:24px; border-radius:60% 60% 35% 35%; background:#ffffff70; }
+.map-cloud::before { content:""; position:absolute; width:42px; height:38px; border-radius:50%; left:25px; bottom:0; background:inherit; }
+.map-cloud-one { right:16px; top:50px; transform:scale(.9); }.map-cloud-two { left:15px; top:250px; transform:scale(.65); }
+.map-sun { position:absolute; width:55px; height:55px; right:25px; top:115px; border-radius:50%; background:#ffe8a3a0; box-shadow:0 0 0 10px #fff5; }
+.map-landmark { position:absolute; right:25px; top:365px; font-size:80px; opacity:.17; transform:rotate(-12deg); }
+.world-prize { margin:0 15px 18px; min-height:72px; padding:14px; border-radius:18px; border:2px solid #ffffffb0; display:flex; align-items:center; gap:12px; background:#ffffff65; }
+.prize-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:12px; background:#ffffffa0; font-size:30px; flex-shrink:0; }
+.world-prize div>span { display:block; font-size:6px; letter-spacing:1px; font-weight:800; margin-bottom:5px; }
+.world-prize strong { font-size:12px; }
+.prize-earned { background:#fff5d4; border-color:#ffe9a2; }
+.journey-legend { text-align:center; color:var(--muted); font-size:10px; line-height:2.1; padding:25px 0 0; }
+@keyframes island-hover { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-7px) } }
+@keyframes star-shimmer { 0%,100% { opacity:1 } 50% { opacity:.65; transform:rotate(2deg) } }
+@keyframes reward-pop { from { opacity:0; transform:translateY(15px) scale(.2) rotate(-20deg) } to { opacity:1; transform:none } }
+@keyframes combo-celebrate { 0% { opacity:0; transform:translate(-50%,-8px) scale(.75) } 15%,70% { opacity:1; transform:translate(-50%,0) scale(1) } 100% { opacity:0; transform:translate(-50%,-12px) scale(.95) } }
+@media(max-width:850px) {
+  .festival-sticker { width:90px; height:90px; bottom:55px; font-size:7px; right:0; }.festival-sticker b { font-size:25px; }
+  .journey-worlds { gap:12px; }.world-heading { padding:22px 15px 0; }.world-heading h2 { font-size:20px; }.world-heading p { font-size:10px; min-height:52px; }
+  .journey-stop { width:125px; }.journey-stop>strong { font-size:10px; }.journey-stop>small { font-size:7px; }.level-orb { width:64px; height:64px; font-size:28px; }.world-prize { padding:10px; margin-inline:8px; gap:8px; }.prize-icon { width:30px; height:35px; font-size:25px; }.world-prize strong { font-size:10px; }.world-prize div>span { font-size:5px; }
+}
+@media(max-width:640px) {
+  :root[data-theme="festival"] .page { padding-inline:max(16px,env(safe-area-inset-left)); }
+  :root[data-theme="festival"] .game { gap:18px; }
+  :root[data-theme="festival"] .appbar { padding-block:15px; }.wordmark { gap:7px; }
+  :root[data-theme="festival"] .icon-btn { width:36px; height:36px; }
+  :root[data-theme="festival"] .dojo-hero { display:block; min-height:0; padding-bottom:0; }
+  :root[data-theme="festival"] .hero-copy { padding:25px 0 0; }
+  :root[data-theme="festival"] .hero-copy .eyebrow { font-size:8px; letter-spacing:1.2px; }
+  :root[data-theme="festival"] .hero-copy h1 { font-size:clamp(38px,10.6vw,58px); letter-spacing:-2px; margin:16px 0; }
+  :root[data-theme="festival"] .hero-copy p { font-size:12px; line-height:1.8; margin-bottom:22px; }
+  :root[data-theme="festival"] .hero-launch { gap:12px; }.hero-footnote { font-size:7px; letter-spacing:.7px; max-width:none; }
+  .festival-scene { display:block; width:90%; max-width:390px; height:240px; margin:3px auto -5px; }
+  .festival-sticker { right:0; bottom:34px; width:84px; height:84px; font-size:6px; }.festival-sticker b { font-size:26px; }
+  :root[data-theme="festival"] .dojo-facts { padding:13px 12px; border-radius:13px; font-size:9px; gap:9px; }
+  :root[data-theme="festival"] .dojo-facts b { margin-right:4px; font-size:8px; }
+  :root[data-theme="festival"] .adventure-invite { border-radius:20px; margin-top:19px; }
+  :root[data-theme="festival"] .dojo-section-heading { margin-top:24px; }.dojo-section-heading h2 { font-size:23px; }
+  :root[data-theme="festival"] .mission-card { border-radius:19px; padding:18px; }
+  :root[data-theme="festival"] .mission-art { width:65px; height:65px; }
+  :root[data-theme="festival"] .mission-card h3 { font-size:21px; }
+  :root[data-theme="festival"] .arena-heading h1 { font-size:28px; letter-spacing:-1px; }
+  :root[data-theme="festival"] .board-wrap { padding:6px; border-width:2px; border-radius:19px; }
+  :root[data-theme="festival"] .board { border-radius:11px; }
+  :root[data-theme="festival"] :is(.board-cell,.tile-inner) { border-radius:9px; }
+  :root[data-theme="festival"] .tile-value { font-size:11px; top:5px; left:5px; }.tile-small .tile-label { font-size:6px; }
+  :root[data-theme="festival"] .score-box { padding:9px 11px; min-width:70px; }
+  .mobile-next-goal { display:block; order:1; }.mobile-next-goal .next-rank { grid-template-columns:1fr 122px; padding:10px 13px; border-radius:15px; min-height:65px; }
+  .mobile-next-goal .next-rank-heading { grid-column:1; margin:0; flex-wrap:wrap; gap:3px; }.mobile-next-goal .next-rank-heading>.eyebrow { font-size:6px; letter-spacing:.9px; }.mobile-next-goal .next-rank-heading>span:last-child { font-size:7px; }
+  .mobile-next-goal .merge-recipe { grid-row:1/3; }.mobile-next-goal .next-rank>strong { font-size:17px; }.mobile-next-goal .next-rank p { display:none; }
+  .arena-layout:has(.mobile-next-goal) .arena-sidebar>.next-rank { display:none; }
+  .combo-burst { padding:7px 10px; gap:5px; top:7px; }.combo-burst strong { font-size:13px; }.combo-burst b { font-size:7px; }.combo-burst>span { font-size:11px; }
+  .journey-heading { padding:15px 0 25px; display:block; }.journey-heading h1 { font-size:37px; letter-spacing:-1.8px; }.journey-heading p { font-size:12px; }
+  .journey-totals { display:flex; align-items:center; gap:10px; padding:12px 17px; border-radius:17px; margin-top:20px; }.journey-totals>span:first-child { font-size:28px; }.journey-totals strong { font-size:25px; }.journey-totals>span:last-child { margin-left:auto; max-width:100px; font-size:9px; line-height:1.6; }
+  .journey-worlds { grid-template-columns:1fr; gap:24px; }.world-heading { padding:24px 24px 0; }.world-heading h2 { font-size:28px; }.world-heading p { font-size:12px; min-height:0; }
+  .journey-stop { width:160px; }.journey-stop>strong { font-size:12px; }.journey-stop>small { font-size:9px; }.level-orb { width:74px; height:74px; font-size:32px; }.world-prize { margin-inline:18px; padding:15px; gap:15px; }.prize-icon { width:42px; height:42px; font-size:30px; }.world-prize strong { font-size:13px; }.world-prize div>span { font-size:7px; }.journey-legend { font-size:8px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .festival-lead,.festival-stars,.overlay-card .adventure-stars .earned { animation:none; }
+  .combo-burst { display:none; }
+  .level-orb { transition:none; }
+}

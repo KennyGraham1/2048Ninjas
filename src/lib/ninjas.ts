@@ -4,6 +4,7 @@ export interface NinjaStyle {
   kind: "ninja" | "smoke";
   rank: number;
   suit: string;
+  gem: string;
   accent: string;
   bg: string;
   fg: string;
@@ -30,9 +31,11 @@ const RANKS = [
   ["Immortal", "The ultimate ninja. Your legend will never fade.", "#60479b", "#f3c7ff", "#272139", "#f3c7ff"],
 ] as const;
 
+const GEMS = ["#62b9dc", "#879aee", "#59c8a6", "#af8bef", "#d283d9", "#58c7d5", "#8e9fc3", "#ef84a5", "#73a9f0", "#f4a266", "#edc663", "#b991e7", "#8acbdc", "#ed8f76", "#68c8b2", "#e6bd5d", "#c8a0ec"];
+
 export const NINJA_LIST: (NinjaStyle & { value: number })[] = RANKS.map(
   ([name, description, suit, accent, bg, fg], rank) => ({
-    value: 2 ** (rank + 1), name, description, kind: "ninja", rank, suit, accent, bg, fg,
+    value: 2 ** (rank + 1), name, description, kind: "ninja", rank, suit, accent, bg, fg, gem: GEMS[rank],
   }),
 );
 
@@ -41,7 +44,7 @@ export const MAX_DEFINED = 131072;
 export const SMOKE_STYLE: NinjaStyle = {
   name: "Smoke Bomb",
   description: "A little ninja magic. Merges with any ninja and doubles its value.",
-  kind: "smoke", rank: 0, suit: "#59467a", accent: "#dbc1ff", bg: "#ede2fa", fg: "#63458a",
+  kind: "smoke", rank: 0, gem: "#cf9cea", suit: "#59467a", accent: "#dbc1ff", bg: "#ede2fa", fg: "#63458a",
 };
 
 export function ninjaFor(value: number): NinjaStyle {
